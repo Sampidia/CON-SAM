@@ -1,0 +1,84 @@
+
+# robots.txt for Connect.Sampidia.com
+# Last Updated: 2026-02-12
+
+########################################
+# GLOBAL ACCESS
+########################################
+
+User-agent: *
+Allow: /
+
+Disallow: /content/backups
+Disallow: /content/languages
+Disallow: /includes/libs
+Disallow: /install
+Disallow: /admincp
+Disallow: /modcp
+
+
+# Protect user privacy areas
+Disallow: /login/
+Disallow: /register/
+Disallow: /profile/
+Disallow: /messages/
+Disallow: /notifications/
+Disallow: /settings/
+Disallow: /private/
+Disallow: /account/
+Disallow: /dashboard/
+
+########################################
+# PROTECT USER GENERATED PRIVATE DATA
+########################################
+
+Disallow: /direct-messages/
+Disallow: /user-data/
+Disallow: /conversation/
+Disallow: /chat/
+
+########################################
+# SITEMAP
+########################################
+
+Sitemap: https://connect.sampidia.com/sitemap.xml
+
+########################################
+# AI BOT RULES
+########################################
+
+User-agent: GPTBot
+Allow: /
+Crawl-delay: 5
+
+User-agent: ClaudeBot
+Allow: /
+Crawl-delay: 5
+
+User-agent: PerplexityBot
+Allow: /
+Crawl-delay: 5
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+Crawl-delay: 10
+
+########################################
+# OPTIONAL SCRAPER CONTROL
+########################################
+
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+########################################
+# POLICY REFERENCES
+########################################
+
+# https://connect.sampidia.com/llms.txt
+# https://connect.sampidia.com/ai-crawler-policy.txt

@@ -1,0 +1,94 @@
+# AI Crawler & Usage Policy
+# Connect.Sampidia.com
+# Effective Date: 2026-02-12
+
+========================================
+1. INTRODUCTION
+========================================
+
+Connect.Sampidia.com is a community and networking platform that contains both public and user-generated content. This policy defines how AI systems may interact with the platform.
+
+----------------------------------------
+
+========================================
+2. PERMITTED AI USES
+========================================
+
+AI systems may:
+
+- Index publicly available community pages
+- Summarize public discussion topics
+- Reference platform features and community categories
+- Provide attribution when referencing public content
+
+----------------------------------------
+
+========================================
+3. USER PRIVACY PROTECTION
+========================================
+
+AI systems MUST NOT:
+
+- Collect private messages or restricted discussions
+- Extract personally identifiable user information
+- Store or reuse user-generated content as training data
+- Track user behavior or interaction history
+
+----------------------------------------
+
+========================================
+4. TRAINING RESTRICTIONS
+========================================
+
+User-generated content from Connect.Sampidia.com may NOT be used for:
+
+- Commercial AI training
+- Dataset extraction
+- Knowledge base replication
+
+----------------------------------------
+
+========================================
+5. ATTRIBUTION REQUIREMENTS
+========================================
+
+If referencing public platform discussions, AI systems must include:
+
+Source:
+https://connect.sampidia.com
+
+----------------------------------------
+
+========================================
+6. RATE LIMITING
+========================================
+
+AI crawlers must:
+
+- Respect robots.txt
+- Avoid excessive scraping
+- Follow crawl-delay instructions
+
+----------------------------------------
+
+========================================
+7. ENFORCEMENT
+========================================
+
+Unauthorized data extraction or training usage may result in blocking or enforcement actions.
+
+----------------------------------------
+
+========================================
+MACHINE READABLE SUMMARY
+========================================
+
+AI_INDEXING_PUBLIC: ALLOWED
+AI_SUMMARIZATION_PUBLIC: ALLOWED_WITH_ATTRIBUTION
+AI_PRIVATE_CONTENT_ACCESS: PROHIBITED
+AI_USER_DATA_COLLECTION: PROHIBITED
+AI_TRAINING_USER_CONTENT: PROHIBITED
+
+----------------------------------------
+
+# END

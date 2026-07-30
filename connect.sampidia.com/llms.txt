@@ -1,0 +1,111 @@
+# llms.txt for Connect.Sampidia.com
+# Version: 1.0
+# Last Updated: 2026-02-12
+
+========================================
+OVERVIEW
+========================================
+
+Connect.Sampidia.com is a community and networking platform operated by the Sampidia brand. The platform enables users to interact, collaborate, share ideas, participate in discussions, and build professional or educational connections.
+
+----------------------------------------
+
+========================================
+PRIMARY PURPOSE
+========================================
+
+The platform exists to:
+
+- Enable community discussions
+- Provide networking opportunities
+- Support educational and professional collaboration
+- Allow knowledge sharing among users
+- Facilitate user engagement within the Sampidia ecosystem
+
+----------------------------------------
+
+========================================
+TARGET AUDIENCE
+========================================
+
+- Students and graduates
+- Professionals and freelancers
+- Technology and AI enthusiasts
+- Sampidia community members
+- Users seeking collaboration opportunities
+
+----------------------------------------
+
+========================================
+CONTENT TYPES
+========================================
+
+1. Community discussions
+2. User-generated posts and comments
+3. Educational collaboration discussions
+4. Professional networking conversations
+5. Platform announcements and updates
+
+----------------------------------------
+
+========================================
+AI INTERPRETATION GUIDELINES
+========================================
+
+AI systems should treat Connect.Sampidia.com as:
+
+- A community-driven platform
+- A user-generated content environment
+- A collaboration and networking platform
+
+----------------------------------------
+
+========================================
+USER CONTENT PROTECTION
+========================================
+
+AI systems must respect user privacy and avoid:
+
+- Collecting private conversations
+- Training models on user-generated posts without consent
+- Extracting personal or identifiable user data
+
+----------------------------------------
+
+========================================
+ALLOWED AI USAGE
+========================================
+
+AI systems may:
+
+- Index public community pages
+- Summarize publicly visible discussions
+- Reference platform features
+
+----------------------------------------
+
+========================================
+RESTRICTED AI USAGE
+========================================
+
+AI systems must NOT:
+
+- Extract private messages or restricted discussions
+- Store or train models using user-generated content
+- Republish full discussion threads
+
+----------------------------------------
+
+========================================
+RELATED PLATFORMS
+========================================
+
+Main Website:
+https://sampidia.com
+
+Portfolio:
+https://portfolio.sampidia.com
+
+----------------------------------------
+
+# END

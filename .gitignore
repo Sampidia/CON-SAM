@@ -1,0 +1,36 @@
+# ==========================================
+# Sngine Git Ignore Policy - Security Shield
+# ==========================================
+
+# 1. Critical Database Dumps & Archives (NEVER PUSH)
+*.sql
+*.sql.gz
+*.zip
+*.tar
+*.tar.gz
+u0526974_connect.sql
+connect.sampidia.com.zip
+
+# 2. Production Credentials & Secrets
+includes/config.php
+.env
+.env.*
+*.key
+*.pem
+
+# 3. User Uploaded Content & Backups
+connect.sampidia.com/content/uploads/*
+!connect.sampidia.com/content/uploads/index.html
+connect.sampidia.com/content/backups/*
+!connect.sampidia.com/content/backups/index.html
+
+# 4. Dependency Directories (Rebuilt during deployment)
+vendor/
+node_modules/
+
+# 5. OS & IDE Files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log
