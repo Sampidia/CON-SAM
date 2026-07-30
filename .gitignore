@@ -34,3 +34,8 @@ Thumbs.db
 .idea/
 .vscode/
 *.log
+
+# 6. Smarty Compiled Templates
+connect.sampidia.com/content/themes/default/templates_compiled/*
+!connect.sampidia.com/content/themes/default/templates_compiled/index.html
+
