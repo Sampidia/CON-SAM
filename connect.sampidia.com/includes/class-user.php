@@ -886,7 +886,7 @@ class User
   {
     global $db;
     $requests = [];
-    $get_requests = $db->query(sprintf("SELECT user_one_id FROM friends WHERE status = 0 AND user_two_id = %s", secure($this->_data['user_id'], 'int')));
+    $get_requests = $db->query(sprintf("SELECT user_one_id FROM friends WHERE status = '0' AND user_two_id = %s", secure($this->_data['user_id'], 'int')));
     if ($get_requests->num_rows > 0) {
       while ($request = $get_requests->fetch_assoc()) {
         $requests[] = $request['user_one_id'];
@@ -905,7 +905,7 @@ class User
   {
     global $db;
     $requests = [];
-    $get_requests = $db->query(sprintf("SELECT user_two_id FROM friends WHERE status = 0 AND user_one_id = %s", secure($this->_data['user_id'], 'int')));
+    $get_requests = $db->query(sprintf("SELECT user_two_id FROM friends WHERE status = '0' AND user_one_id = %s", secure($this->_data['user_id'], 'int')));
     if ($get_requests->num_rows > 0) {
       while ($request = $get_requests->fetch_assoc()) {
         $requests[] = $request['user_two_id'];
@@ -1369,9 +1369,9 @@ class User
     $requests = [];
     $offset *= $system['max_results'];
     if ($last_request_id !== null) {
-      $get_requests = $db->query(sprintf("SELECT friends.id, friends.user_one_id as user_id, users.user_name, users.user_firstname, users.user_lastname, users.user_gender, users.user_picture FROM friends INNER JOIN users ON friends.user_one_id = users.user_id WHERE friends.status = 0 AND friends.user_two_id = %s AND friends.id > %s ORDER BY friends.id DESC", secure($this->_data['user_id'], 'int'), secure($last_request_id, 'int')));
+      $get_requests = $db->query(sprintf("SELECT friends.id, friends.user_one_id as user_id, users.user_name, users.user_firstname, users.user_lastname, users.user_gender, users.user_picture FROM friends INNER JOIN users ON friends.user_one_id = users.user_id WHERE friends.status = '0' AND friends.user_two_id = %s AND friends.id > %s ORDER BY friends.id DESC", secure($this->_data['user_id'], 'int'), secure($last_request_id, 'int')));
     } else {
-      $get_requests = $db->query(sprintf("SELECT friends.id, friends.user_one_id as user_id, users.user_name, users.user_firstname, users.user_lastname, users.user_gender, users.user_picture FROM friends INNER JOIN users ON friends.user_one_id = users.user_id WHERE friends.status = 0 AND friends.user_two_id = %s ORDER BY friends.id DESC LIMIT %s, %s", secure($this->_data['user_id'], 'int'), secure($offset, 'int', false), secure($system['max_results'], 'int', false)));
+      $get_requests = $db->query(sprintf("SELECT friends.id, friends.user_one_id as user_id, users.user_name, users.user_firstname, users.user_lastname, users.user_gender, users.user_picture FROM friends INNER JOIN users ON friends.user_one_id = users.user_id WHERE friends.status = '0' AND friends.user_two_id = %s ORDER BY friends.id DESC LIMIT %s, %s", secure($this->_data['user_id'], 'int'), secure($offset, 'int', false), secure($system['max_results'], 'int', false)));
     }
     if ($get_requests->num_rows > 0) {
       while ($request = $get_requests->fetch_assoc()) {
@@ -1395,7 +1395,7 @@ class User
     global $db, $system;
     $requests = [];
     $offset *= $system['max_results'];
-    $get_requests = $db->query(sprintf("SELECT friends.user_two_id as user_id, users.user_name, users.user_firstname, users.user_lastname, users.user_gender, users.user_picture FROM friends INNER JOIN users ON friends.user_two_id = users.user_id WHERE friends.status = 0 AND friends.user_one_id = %s LIMIT %s, %s", secure($this->_data['user_id'], 'int'), secure($offset, 'int', false), secure($system['max_results'], 'int', false)));
+    $get_requests = $db->query(sprintf("SELECT friends.user_two_id as user_id, users.user_name, users.user_firstname, users.user_lastname, users.user_gender, users.user_picture FROM friends INNER JOIN users ON friends.user_two_id = users.user_id WHERE friends.status = '0' AND friends.user_one_id = %s LIMIT %s, %s", secure($this->_data['user_id'], 'int'), secure($offset, 'int', false), secure($system['max_results'], 'int', false)));
     if ($get_requests->num_rows > 0) {
       while ($request = $get_requests->fetch_assoc()) {
         $request['user_picture'] = get_picture($request['user_picture'], $request['user_gender']);
@@ -1415,7 +1415,7 @@ class User
   public function get_friend_requests_sent_total()
   {
     global $db;
-    $get_total_requests = $db->query(sprintf("SELECT COUNT(*) as count FROM friends INNER JOIN users ON friends.user_two_id = users.user_id WHERE friends.status = 0 AND friends.user_one_id = %s", secure($this->_data['user_id'], 'int')));
+    $get_total_requests = $db->query(sprintf("SELECT COUNT(*) as count FROM friends INNER JOIN users ON friends.user_two_id = users.user_id WHERE friends.status = '0' AND friends.user_one_id = %s", secure($this->_data['user_id'], 'int')));
     return $get_total_requests->fetch_assoc()['count'];
   }
 
@@ -2025,7 +2025,7 @@ class User
 
       case 'friend-accept':
         /* check if there is a friend request from the target to the viewer */
-        $check = $db->query(sprintf("SELECT COUNT(*) as count FROM friends WHERE user_one_id = %s AND user_two_id = %s AND status = 0", secure($id, 'int'), secure($this->_data['user_id'], 'int')));
+        $check = $db->query(sprintf("SELECT COUNT(*) as count FROM friends WHERE user_one_id = %s AND user_two_id = %s AND status = '0'", secure($id, 'int'), secure($this->_data['user_id'], 'int')));
         /* if no -> return */
         if ($check->fetch_assoc()['count'] == 0)
           return;
@@ -2039,7 +2039,7 @@ class User
 
       case 'friend-decline':
         /* check if there is a friend request from the target to the viewer */
-        $check = $db->query(sprintf("SELECT COUNT(*) as count FROM friends WHERE user_one_id = %s AND user_two_id = %s AND status = 0", secure($id, 'int'), secure($this->_data['user_id'], 'int')));
+        $check = $db->query(sprintf("SELECT COUNT(*) as count FROM friends WHERE user_one_id = %s AND user_two_id = %s AND status = '0'", secure($id, 'int'), secure($this->_data['user_id'], 'int')));
         /* if no -> return */
         if ($check->fetch_assoc()['count'] == 0)
           return;
@@ -2093,7 +2093,7 @@ class User
 
       case 'friend-cancel':
         /* check if there is a request from the viewer to the target */
-        $check = $db->query(sprintf("SELECT COUNT(*) as count FROM friends WHERE user_one_id = %s AND user_two_id = %s AND status = 0", secure($this->_data['user_id'], 'int'), secure($id, 'int')));
+        $check = $db->query(sprintf("SELECT COUNT(*) as count FROM friends WHERE user_one_id = %s AND user_two_id = %s AND status = '0'", secure($this->_data['user_id'], 'int'), secure($id, 'int')));
         /* if no -> return */
         if ($check->fetch_assoc()['count'] == 0)
           return;

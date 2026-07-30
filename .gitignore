@@ -19,8 +19,11 @@ includes/config.php
 *.pem
 
 # 3. User Uploaded Content & Backups
-connect.sampidia.com/content/uploads/*
-!connect.sampidia.com/content/uploads/index.html
+# NOTE: uploads are tracked so the Docker image built by Render includes them.
+# Long-term: migrate to an object storage provider (S3 / Cloudflare R2) and
+# restore the exclusion rule below.
+# connect.sampidia.com/content/uploads/*
+# !connect.sampidia.com/content/uploads/index.html
 connect.sampidia.com/content/backups/*
 !connect.sampidia.com/content/backups/index.html
 
