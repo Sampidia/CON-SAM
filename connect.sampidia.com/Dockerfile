@@ -5,6 +5,9 @@
 
 FROM php:8.3-apache
 
+# Copy Composer binary from official image
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
 # Install System Dependencies and Libraries for PHP Extensions
 RUN apt-get update && apt-get install -y \
     libpng-dev \
@@ -38,8 +41,14 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
 # Enable Apache Rewrite and Headers Modules (.htaccess compatibility)
 RUN a2enmod rewrite headers
 
+# Set Working Directory
+WORKDIR /var/www/html
+
 # Copy Sngine Application Code into Document Root
 COPY . /var/www/html/
+
+# Install Composer Dependencies
+RUN composer install --no-dev --optimize-autoloader --no-interaction --ignore-platform-reqs
 
 # Create required cache & compiled template directories
 RUN mkdir -p /var/www/html/content/themes/default/templates_compiled \
