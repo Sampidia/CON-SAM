@@ -1033,7 +1033,7 @@ class User
     }
     $offset *= $system['max_results_even'];
     $limit_statement = ($get_all) ? "" : sprintf("LIMIT %s, %s", secure($offset, 'int', false), secure($system['max_results_even'], 'int', false));
-    $get_friends = $db->query(sprintf('SELECT users.user_id, users.user_name, users.user_firstname, users.user_lastname, users.user_gender, users.user_picture, users.user_subscribed, users.user_verified FROM friends INNER JOIN users ON (friends.user_one_id = users.user_id AND friends.user_one_id != %1$s) OR (friends.user_two_id = users.user_id AND friends.user_two_id != %1$s) WHERE users.user_banned = "0" AND friends.status = 1 AND (friends.user_one_id = %1$s OR friends.user_two_id = %1$s) ' . $limit_statement, secure($user_id, 'int')));
+    $get_friends = $db->query(sprintf('SELECT users.user_id, users.user_name, users.user_firstname, users.user_lastname, users.user_gender, users.user_picture, users.user_subscribed, users.user_verified FROM friends INNER JOIN users ON (friends.user_one_id = users.user_id AND friends.user_one_id != %1$s) OR (friends.user_two_id = users.user_id AND friends.user_two_id != %1$s) WHERE users.user_banned = \'0\' AND friends.status = 1 AND (friends.user_one_id = %1$s OR friends.user_two_id = %1$s) ' . $limit_statement, secure($user_id, 'int')));
     if ($get_friends->num_rows > 0) {
       while ($friend = $get_friends->fetch_assoc()) {
         $friend['user_picture'] = get_picture($friend['user_picture'], $friend['user_gender']);
@@ -1659,7 +1659,7 @@ class User
 
       case 'users':
         /* search users */
-        $get_users = $db->query(sprintf('SELECT user_id, user_name, user_firstname, user_lastname, user_gender, user_picture, user_subscribed, user_verified FROM users WHERE user_banned = "0" AND (user_name LIKE %1$s OR user_firstname LIKE %1$s OR user_lastname LIKE %1$s OR CONCAT(user_firstname,  " ", user_lastname) LIKE %1$s) ORDER BY user_firstname ASC LIMIT %2$s, %3$s', secure($query, 'search'), secure($offset, 'int', false), secure($system['search_results'], 'int', false)));
+        $get_users = $db->query(sprintf('SELECT user_id, user_name, user_firstname, user_lastname, user_gender, user_picture, user_subscribed, user_verified FROM users WHERE user_banned = \'0\' AND (user_name LIKE %1$s OR user_firstname LIKE %1$s OR user_lastname LIKE %1$s OR CONCAT(user_firstname,  " ", user_lastname) LIKE %1$s) ORDER BY user_firstname ASC LIMIT %2$s, %3$s', secure($query, 'search'), secure($offset, 'int', false), secure($system['search_results'], 'int', false)));
         if ($get_users->num_rows > 0) {
           while ($user = $get_users->fetch_assoc()) {
             $user['user_picture'] = get_picture($user['user_picture'], $user['user_gender']);
@@ -1730,7 +1730,7 @@ class User
     global $db, $system;
     $results = [];
     /* search users */
-    $get_users = $db->query(sprintf('SELECT user_id, user_name, user_firstname, user_lastname, user_gender, user_picture, user_subscribed, user_verified FROM users WHERE user_banned = "0" AND (user_name LIKE %1$s OR user_firstname LIKE %1$s OR user_lastname LIKE %1$s OR CONCAT(user_firstname,  " ", user_lastname) LIKE %1$s) LIMIT %2$s', secure($query, 'search'), secure($system['min_results'], 'int', false)));
+    $get_users = $db->query(sprintf('SELECT user_id, user_name, user_firstname, user_lastname, user_gender, user_picture, user_subscribed, user_verified FROM users WHERE user_banned = \'0\' AND (user_name LIKE %1$s OR user_firstname LIKE %1$s OR user_lastname LIKE %1$s OR CONCAT(user_firstname,  " ", user_lastname) LIKE %1$s) LIMIT %2$s', secure($query, 'search'), secure($system['min_results'], 'int', false)));
     if ($get_users->num_rows > 0) {
       while ($user = $get_users->fetch_assoc()) {
         $user['user_picture'] = get_picture($user['user_picture'], $user['user_gender']);
@@ -5432,20 +5432,20 @@ class User
       return "recipient_offline";
     }
     /* check if target user busy (someone calling him || he calling someone || in a call) (audio|video) */
-    $check_target_busy_audio = $db->query(sprintf('SELECT COUNT(*) as count FROM conversations_calls_audio WHERE (from_user_id = %1$s OR to_user_id = %1$s) AND declined = "0" AND updated_time >= SUBTIME(NOW(), SEC_TO_TIME(40))', secure($to_user_id, 'int')));
+    $check_target_busy_audio = $db->query(sprintf('SELECT COUNT(*) as count FROM conversations_calls_audio WHERE (from_user_id = %1$s OR to_user_id = %1$s) AND declined = \'0\' AND updated_time >= SUBTIME(NOW(), SEC_TO_TIME(40))', secure($to_user_id, 'int')));
     if ($check_target_busy_audio->fetch_assoc()['count'] > 0) {
       return "recipient_busy";
     }
-    $check_target_busy_video = $db->query(sprintf('SELECT COUNT(*) as count FROM conversations_calls_video WHERE (from_user_id = %1$s OR to_user_id = %1$s) AND declined = "0" AND updated_time >= SUBTIME(NOW(), SEC_TO_TIME(40))', secure($to_user_id, 'int')));
+    $check_target_busy_video = $db->query(sprintf('SELECT COUNT(*) as count FROM conversations_calls_video WHERE (from_user_id = %1$s OR to_user_id = %1$s) AND declined = \'0\' AND updated_time >= SUBTIME(NOW(), SEC_TO_TIME(40))', secure($to_user_id, 'int')));
     if ($check_target_busy_video->fetch_assoc()['count'] > 0) {
       return "recipient_busy";
     }
     /* check if the viewer busy (someone calling him || he calling someone || in a call) (audio|video) */
-    $check_viewer_busy_audio = $db->query(sprintf('SELECT COUNT(*) as count FROM conversations_calls_audio WHERE (from_user_id = %1$s OR to_user_id = %1$s) AND declined = "0" AND updated_time >= SUBTIME(NOW(), SEC_TO_TIME(40))', secure($this->_data['user_id'], 'int')));
+    $check_viewer_busy_audio = $db->query(sprintf('SELECT COUNT(*) as count FROM conversations_calls_audio WHERE (from_user_id = %1$s OR to_user_id = %1$s) AND declined = \'0\' AND updated_time >= SUBTIME(NOW(), SEC_TO_TIME(40))', secure($this->_data['user_id'], 'int')));
     if ($check_viewer_busy_audio->fetch_assoc()['count'] > 0) {
       return "caller_busy";
     }
-    $check_viewer_busy_video = $db->query(sprintf('SELECT COUNT(*) as count FROM conversations_calls_audio WHERE (from_user_id = %1$s OR to_user_id = %1$s) AND declined = "0" AND updated_time >= SUBTIME(NOW(), SEC_TO_TIME(40))', secure($this->_data['user_id'], 'int')));
+    $check_viewer_busy_video = $db->query(sprintf('SELECT COUNT(*) as count FROM conversations_calls_audio WHERE (from_user_id = %1$s OR to_user_id = %1$s) AND declined = \'0\' AND updated_time >= SUBTIME(NOW(), SEC_TO_TIME(40))', secure($this->_data['user_id'], 'int')));
     if ($check_viewer_busy_video->fetch_assoc()['count'] > 0) {
       return "caller_busy";
     }
@@ -5508,7 +5508,7 @@ class User
         break;
     }
     /* new call -> [call created from less than 40 seconds and not answered nor declined] */
-    $get_new_calls = $db->query(sprintf('SELECT %1$s.*, users.user_name, users.user_firstname, users.user_lastname, users.user_gender, users.user_picture FROM %1$s INNER JOIN users ON %1$s.from_user_id = users.user_id WHERE to_user_id = %2$s AND created_time >= SUBTIME(NOW(), SEC_TO_TIME(40)) AND answered = "0" AND declined = "0"', $table, secure($this->_data['user_id'], 'int')));
+    $get_new_calls = $db->query(sprintf('SELECT %1$s.*, users.user_name, users.user_firstname, users.user_lastname, users.user_gender, users.user_picture FROM %1$s INNER JOIN users ON %1$s.from_user_id = users.user_id WHERE to_user_id = %2$s AND created_time >= SUBTIME(NOW(), SEC_TO_TIME(40)) AND answered = \'0\' AND declined = \'0\'', $table, secure($this->_data['user_id'], 'int')));
     if ($get_new_calls->num_rows == 0) {
       return false;
     }
