@@ -41,9 +41,11 @@ RUN a2enmod rewrite headers
 # Copy Sngine Application Code into Document Root
 COPY . /var/www/html/
 
-# Configure Apache DocumentRoot and Permissions
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 775 /var/www/html/content
+# Create required cache & compiled template directories
+RUN mkdir -p /var/www/html/content/themes/default/templates_compiled \
+    && mkdir -p /var/www/html/content/uploads \
+    && chown -R www-data:www-data /var/www/html \
+    && chmod -R 777 /var/www/html/content
 
 # Custom PHP settings for file uploads and execution timeouts
 RUN echo "upload_max_filesize = 150M" > /usr/local/etc/php/conf.d/sngine.ini \
@@ -51,7 +53,7 @@ RUN echo "upload_max_filesize = 150M" > /usr/local/etc/php/conf.d/sngine.ini \
     && echo "memory_limit = 512M" >> /usr/local/etc/php/conf.d/sngine.ini \
     && echo "max_execution_time = 300" >> /usr/local/etc/php/conf.d/sngine.ini \
     && echo "max_input_vars = 5000" >> /usr/local/etc/php/conf.d/sngine.ini \
-    && echo "display_errors = Off" >> /usr/local/etc/php/conf.d/sngine.ini
+    && echo "display_errors = On" >> /usr/local/etc/php/conf.d/sngine.ini
 
 # Expose Port 80 for Web Traffic
 EXPOSE 80
