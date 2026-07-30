@@ -72,6 +72,11 @@ RUN echo "upload_max_filesize = 150M" > /usr/local/etc/php/conf.d/sngine.ini \
     && echo "display_errors = On" >> /usr/local/etc/php/conf.d/sngine.ini \
     && echo "allow_url_fopen = On" >> /usr/local/etc/php/conf.d/sngine.ini
 
+# Copy and set up the entrypoint script
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 EXPOSE 80
 
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["apache2-foreground"]
