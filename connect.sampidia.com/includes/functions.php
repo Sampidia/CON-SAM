@@ -162,10 +162,25 @@ function get_system_url()
  */
 function check_system_url()
 {
+  /* Bypass redirect for local health checks and loopback/internal hosts */
+  $http_host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
+  $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+  if (
+    $http_host == 'localhost' ||
+    $http_host == '127.0.0.1' ||
+    $http_host == '::1' ||
+    filter_var($http_host, FILTER_VALIDATE_IP) ||
+    strpos($user_agent, 'Go-http-client') !== false ||
+    strpos($http_host, '.onrender.com') !== false
+  ) {
+    return;
+  }
+
   $protocol = get_system_protocol();
   $parsed_url = parse_url(SYS_URL);
   if (($parsed_url['scheme'] != $protocol) || ($parsed_url['host'] != $_SERVER['HTTP_HOST'])) {
     header('Location: ' . SYS_URL);
+    exit;
   }
 }
 
