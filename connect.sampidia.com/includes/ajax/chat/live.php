@@ -45,9 +45,11 @@ if (isset($_POST['opened_thread'])) {
   if (!is_array($_POST['opened_thread'])) {
     _error(400);
   }
-  if (!is_numeric($_POST['opened_thread']['conversation_id']) || !is_numeric($_POST['opened_thread']['last_message_id'])) {
+  if (!is_numeric($_POST['opened_thread']['conversation_id'])) {
     _error(400);
   }
+  /* last_message_id may be absent when thread has no messages yet (undefined in JS → dropped by JSON.stringify) */
+  $_POST['opened_thread']['last_message_id'] = isset($_POST['opened_thread']['last_message_id']) && is_numeric($_POST['opened_thread']['last_message_id']) ? $_POST['opened_thread']['last_message_id'] : 0;
 }
 
 try {
