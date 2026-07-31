@@ -492,7 +492,39 @@ function init_smarty()
   $smarty->registerPlugin('modifier', 'get_payment_fees_value', 'get_payment_fees_value');
   $smarty->registerPlugin('modifier', 'get_payment_vat_percentage', 'get_payment_vat_percentage');
   $smarty->registerPlugin('modifier', 'implode', 'implode');
+  $smarty->registerPlugin('modifier', 'get_upload_url', 'get_upload_url');
+  $smarty->registerFilter('output', 'smarty_outputfilter_local_uploads');
   return $smarty;
+}
+
+/**
+ * smarty_outputfilter_local_uploads
+ *
+ * Automatically converts cloud upload URLs to local system URLs if the physical file
+ * exists in the local uploads directory. This allows existing local images to continue
+ * displaying seamlessly when Backblaze/Cloud storage is enabled.
+ *
+ * @param string $output
+ * @return string
+ */
+function smarty_outputfilter_local_uploads($output)
+{
+  global $system;
+  if (!empty($system['system_uploads']) && ($system['s3_enabled'] || $system['google_cloud_enabled'] || $system['digitalocean_enabled'] || $system['wasabi_enabled'] || $system['backblaze_enabled'] || $system['yandex_cloud_enabled'] || $system['uploads_cdn_url'])) {
+    $cloud_uploads_url = $system['system_uploads'];
+    $local_uploads_url = $system['system_url'] . '/' . $system['uploads_directory'];
+    $uploads_dir = ABSPATH . $system['uploads_directory'] . '/';
+
+    $pattern = '#' . preg_quote($cloud_uploads_url, '#') . '/([a-zA-Z0-9_\-\.\/]+)#i';
+    $output = preg_replace_callback($pattern, function ($matches) use ($local_uploads_url, $uploads_dir) {
+      $file = $matches[1];
+      if (file_exists($uploads_dir . $file)) {
+        return $local_uploads_url . '/' . $file;
+      }
+      return $matches[0];
+    }, $output);
+  }
+  return $output;
 }
 
 
@@ -3241,27 +3273,34 @@ function backblaze_test()
 {
   global $system;
   try {
+    $region = trim($system['backblaze_region']);
+    $bucket = trim($system['backblaze_bucket']);
+    $key = trim($system['backblaze_key']);
+    $secret = trim($system['backblaze_secret']);
+
+    if (empty($region) || empty($bucket) || empty($key) || empty($secret)) {
+      throw new Exception(__("Please fill in all Backblaze configuration fields (Bucket, Region, Key, Secret)"));
+    }
+
     $s3Client = Aws\S3\S3Client::factory([
       'version'     => 'latest',
-      'endpoint'    => 'https://s3.' . $system['backblaze_region'] . '.backblazeb2.com',
-      'region'      => $system['backblaze_region'],
+      'endpoint'    => 'https://s3.' . $region . '.backblazeb2.com',
+      'region'      => $region,
       'credentials' => [
-        'key'     => $system['backblaze_key'],
-        'secret'  => $system['backblaze_secret'],
-      ]
+        'key'     => $key,
+        'secret'  => $secret,
+      ],
+      'use_path_style_endpoint' => true,
     ]);
-    $buckets = $s3Client->listBuckets();
-    if (empty($buckets)) {
-      throw new Exception(__("There is no buckets in your account"));
-    }
-    if (!$s3Client->doesBucketExist($system['backblaze_bucket'])) {
-      throw new Exception(__("There is no bucket with this name in your account"));
+
+    if (!$s3Client->doesBucketExist($bucket)) {
+      throw new Exception(__("There is no bucket with this name in your Backblaze account or access is denied"));
     }
   } catch (Exception $e) {
     if (DEBUGGING) {
       throw new Exception($e->getMessage());
     } else {
-      throw new Exception(__("Connection Failed, Please check your settings"));
+      throw new Exception(__("Connection Failed: ") . $e->getMessage());
     }
   }
 }
@@ -3278,28 +3317,119 @@ function backblaze_test()
 function backblaze_upload($file_source, $file_name, $content_type = "")
 {
   global $system;
+  $region = trim($system['backblaze_region']);
+  $bucket = trim($system['backblaze_bucket']);
+  $key = trim($system['backblaze_key']);
+  $secret = trim($system['backblaze_secret']);
+
   $s3Client = Aws\S3\S3Client::factory([
     'version'     => 'latest',
-    'endpoint'    => 'https://s3.' . $system['backblaze_region'] . '.backblazeb2.com',
-    'region'      => $system['backblaze_region'],
+    'endpoint'    => 'https://s3.' . $region . '.backblazeb2.com',
+    'region'      => $region,
     'credentials' => [
-      'key'     => $system['backblaze_key'],
-      'secret'  => $system['backblaze_secret'],
-    ]
+      'key'     => $key,
+      'secret'  => $secret,
+    ],
+    'use_path_style_endpoint' => true,
   ]);
   $Key = 'uploads/' . $file_name;
-  $s3Client->putObject([
-    'Bucket' => $system['backblaze_bucket'],
+  if (empty($content_type) || $content_type == 'application/octet-stream') {
+    $content_type = mime_content_type($file_source) ?: 'image/jpeg';
+  }
+
+  $file_stream = fopen($file_source, 'r');
+  $put_params = [
+    'Bucket' => $bucket,
     'Key'    => $Key,
-    'Body'   => fopen($file_source, 'r+'),
+    'Body'   => $file_stream,
     'ContentDisposition' => 'inline',
     'ContentType' => $content_type,
-    'ACL'    => 'public-read',
+  ];
+
+  try {
+    $s3Client->putObject($put_params);
+    if (is_resource($file_stream)) {
+      fclose($file_stream);
+    }
+    /* remove local temp file after successful upload */
+    gc_collect_cycles();
+    if (file_exists($file_source) && $s3Client->doesObjectExist($bucket, $Key)) {
+      @unlink($file_source);
+    }
+  } catch (Exception $e) {
+    if (is_resource($file_stream)) {
+      @fclose($file_stream);
+    }
+    throw new Exception("Backblaze Upload Error: " . $e->getMessage());
+  }
+}
+
+/**
+ * sync_local_uploads_to_backblaze
+ *
+ * Utility function to bulk upload existing local files to Backblaze
+ * without deleting local originals.
+ *
+ * @return array Status report of uploaded and failed files
+ */
+function sync_local_uploads_to_backblaze()
+{
+  global $system;
+  $uploads_dir = ABSPATH . $system['uploads_directory'];
+  $uploaded = 0;
+  $failed = 0;
+  $errors = [];
+
+  $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($uploads_dir));
+  foreach ($iterator as $file) {
+    if ($file->isFile()) {
+      $local_path = $file->getPathname();
+      $relative_path = ltrim(str_replace($uploads_dir, '', $local_path), '/');
+      try {
+        backblaze_upload_keep_local($local_path, $relative_path);
+        $uploaded++;
+      } catch (Exception $e) {
+        $failed++;
+        $errors[] = $relative_path . ': ' . $e->getMessage();
+      }
+    }
+  }
+  return ['uploaded' => $uploaded, 'failed' => $failed, 'errors' => $errors];
+}
+
+function backblaze_upload_keep_local($file_source, $file_name, $content_type = "")
+{
+  global $system;
+  $region = trim($system['backblaze_region']);
+  $bucket = trim($system['backblaze_bucket']);
+  $key = trim($system['backblaze_key']);
+  $secret = trim($system['backblaze_secret']);
+
+  $s3Client = Aws\S3\S3Client::factory([
+    'version'     => 'latest',
+    'endpoint'    => 'https://s3.' . $region . '.backblazeb2.com',
+    'region'      => $region,
+    'credentials' => [
+      'key'     => $key,
+      'secret'  => $secret,
+    ],
+    'use_path_style_endpoint' => true,
   ]);
-  /* remove local file */
-  gc_collect_cycles();
-  if ($s3Client->doesObjectExist($system['backblaze_bucket'], $Key)) {
-    unlink($file_source);
+  $Key = 'uploads/' . $file_name;
+  if (empty($content_type) || $content_type == 'application/octet-stream') {
+    $content_type = mime_content_type($file_source) ?: 'image/jpeg';
+  }
+
+  $file_stream = fopen($file_source, 'r');
+  $s3Client->putObject([
+    'Bucket' => $bucket,
+    'Key'    => $Key,
+    'Body'   => $file_stream,
+    'ContentDisposition' => 'inline',
+    'ContentType' => $content_type,
+  ]);
+  if (is_resource($file_stream)) {
+    fclose($file_stream);
   }
 }
 
@@ -6879,6 +7009,35 @@ function censored_words($text)
  * @param string $type
  * @return string
  */
+/**
+ * get_upload_url
+ *
+ * Resolves full URL for an upload file. If the file exists on local disk
+ * (e.g. uploaded before enabling cloud storage), returns local URL.
+ * Otherwise returns cloud/configured system_uploads URL.
+ *
+ * @param string $file
+ * @return string
+ */
+function get_upload_url($file = "")
+{
+  global $system;
+  if (empty($file)) {
+    return '';
+  }
+  if (substr($file, 0, 4) === "http") {
+    return $file;
+  }
+  if (!empty($system['uploads_directory']) && ($system['s3_enabled'] || $system['google_cloud_enabled'] || $system['digitalocean_enabled'] || $system['wasabi_enabled'] || $system['backblaze_enabled'] || $system['yandex_cloud_enabled'] || $system['uploads_cdn_url'])) {
+    $local_path = ABSPATH . $system['uploads_directory'] . '/' . $file;
+    if (file_exists($local_path)) {
+      return $system['system_url'] . '/' . $system['uploads_directory'] . '/' . $file;
+    }
+  }
+  return $system['system_uploads'] . '/' . $file;
+}
+
+
 function get_picture($picture, $type)
 {
   global $system;
@@ -6937,7 +7096,7 @@ function get_picture($picture, $type)
         break;
     }
   } else {
-    $picture = $system['system_uploads'] . '/' . $picture;
+    $picture = get_upload_url($picture);
   }
   return $picture;
 }
