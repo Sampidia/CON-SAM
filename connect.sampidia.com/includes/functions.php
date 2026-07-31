@@ -3344,6 +3344,7 @@ function backblaze_upload($file_source, $file_name, $content_type = "")
     'Body'   => $file_stream,
     'ContentDisposition' => 'inline',
     'ContentType' => $content_type,
+    'ACL'    => 'public-read',
   ];
 
   try {

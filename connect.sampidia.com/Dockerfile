@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
+    libwebp-dev \
     libzip-dev \
     libicu-dev \
     libgmp-dev \
@@ -25,7 +26,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Configure & Install PHP Extensions
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install -j$(nproc) \
         pdo_mysql \
         mysqli \
@@ -37,7 +38,8 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
         bcmath \
         xml \
         opcache \
-        exif
+        exif \
+        fileinfo
 
 # Enable Apache Modules
 RUN a2enmod rewrite headers
