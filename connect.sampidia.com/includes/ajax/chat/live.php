@@ -45,11 +45,19 @@ if (isset($_POST['opened_thread'])) {
   if (!is_array($_POST['opened_thread'])) {
     _error(400);
   }
-  if (!is_numeric($_POST['opened_thread']['conversation_id'])) {
-    _error(400);
+  /*
+   * The JS sends opened_thread = {} (empty object) when the panel-messages widget
+   * is in a 'sending' state (data('sending') = true), so conversation_id is absent.
+   * Also, last_message_id is undefined (dropped by JSON.stringify) when thread is empty.
+   * Both cases are valid - treat missing/empty opened_thread as "skip thread update".
+   */
+  if (empty($_POST['opened_thread']) || !isset($_POST['opened_thread']['conversation_id']) || !is_numeric($_POST['opened_thread']['conversation_id'])) {
+    /* widget is sending or thread is not ready - skip opened_thread processing */
+    unset($_POST['opened_thread']);
+  } else {
+    /* default last_message_id to 0 when absent (no messages in thread yet) */
+    $_POST['opened_thread']['last_message_id'] = isset($_POST['opened_thread']['last_message_id']) && is_numeric($_POST['opened_thread']['last_message_id']) ? $_POST['opened_thread']['last_message_id'] : 0;
   }
-  /* last_message_id may be absent when thread has no messages yet (undefined in JS → dropped by JSON.stringify) */
-  $_POST['opened_thread']['last_message_id'] = isset($_POST['opened_thread']['last_message_id']) && is_numeric($_POST['opened_thread']['last_message_id']) ? $_POST['opened_thread']['last_message_id'] : 0;
 }
 
 try {
