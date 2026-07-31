@@ -195,12 +195,16 @@ function init_system_session()
   ini_set('session.cookie_httponly', 1);
   if (get_system_protocol() == "https") {
     ini_set('session.cookie_secure', 1);
+    /* SameSite=None is required for cloud/proxy deployments so the session
+       cookie is sent with AJAX upload requests (cross-origin POST) */
+    ini_set('session.cookie_samesite', 'None');
   }
   session_start();
-  /* set session secret */
-  if (!isset($_SESSION['secret'])) {
-    $_SESSION['secret'] = get_hash_token();
-  }
+  /* Derive a stateless, deterministic secret from JWT_SECRET + session_id().
+   * This makes the secret reproducible on any container (no shared session
+   * storage needed) while remaining tied to the user's session cookie.
+   * Replaces the old random token that was lost on container restarts. */
+  $_SESSION['secret'] = hash_hmac('sha256', session_id(), defined('JWT_SECRET') ? JWT_SECRET : 'default_secret_key');
 }
 
 
