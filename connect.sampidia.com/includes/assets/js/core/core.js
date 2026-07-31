@@ -252,7 +252,7 @@ function initialize() {
     var time_utc = _this.data('time');
     var locale = $('html').data('lang') || 'en-us';
     var offset = moment().utcOffset();
-    var time = moment(time_utc).add({ minutes: offset }).locale(locale);
+    var time = moment(time_utc, ["YYYY-MM-DD HH:mm:ss", "YYYY-MM-DDTHH:mm:ssZ", moment.ISO_8601]).add({ minutes: offset }).locale(locale);
     _this.text(time.fromNow()).attr('title', time.format("dddd, MMMM D, YYYY h:mm a"));
   });
   // run slick slider

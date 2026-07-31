@@ -7127,7 +7127,10 @@ class User
   private function _parse($args = [])
   {
     /* validate arguments */
-    $text = $args['text'];
+    $text = isset($args['text']) ? $args['text'] : '';
+    if (!$text) {
+      return '';
+    }
     $decode_urls = !isset($args['decode_urls']) ? true : $args['decode_urls'];
     $decode_emojis = !isset($args['decode_emojis']) ? true : $args['decode_emojis'];
     $decode_stickers = !isset($args['decode_stickers']) ? true : $args['decode_stickers'];
@@ -21607,7 +21610,7 @@ class User
    */
   public function decode_emojis($text)
   {
-    if (!function_exists('grapheme_strpos')) {
+    if (!$text || !function_exists('grapheme_strpos')) {
       return $text;
     }
     global $emojis;

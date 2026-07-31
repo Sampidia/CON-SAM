@@ -33,11 +33,9 @@
     <!-- Twitter-Meta -->
 
     <!-- Favicon -->
-    {if $system['system_favicon_default']}
-      <link rel="shortcut icon" href="{$system['system_url']}/content/themes/{$system['theme']}/images/favicon.png" />
-    {elseif $system['system_favicon']}
-      <link rel="shortcut icon" href="{$system['system_uploads']}/{$system['system_favicon']}" />
-    {/if}
+    <link rel="icon" type="image/png" href="{$system['system_url']}/connect.png" />
+    <link rel="shortcut icon" href="{$system['system_url']}/connect.png" />
+    <link rel="apple-touch-icon" href="{$system['system_url']}/connect.png" />
     <!-- Favicon -->
 
     <!-- Fonts [Poppins|Font-Awesome] -->

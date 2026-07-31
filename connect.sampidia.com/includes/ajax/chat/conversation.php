@@ -24,7 +24,7 @@ try {
   switch ($_GET['do']) {
     case 'get':
       // valid inputs
-      if (!isset($_GET['conversation_id']) && !is_numeric($_GET['ids'])) {
+      if (!isset($_GET['conversation_id']) || !is_numeric($_GET['conversation_id'])) {
         _error(400);
       }
 
@@ -43,7 +43,7 @@ try {
 
     case 'check':
       // valid inputs
-      if (!isset($_GET['uid']) && !is_numeric($_GET['uid'])) {
+      if (!isset($_GET['uid']) || !is_numeric($_GET['uid'])) {
         _error(400);
       }
 
