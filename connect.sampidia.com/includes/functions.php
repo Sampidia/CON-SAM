@@ -3007,7 +3007,7 @@ function delete_avatar_cover_image($handle, $id = null)
 function aws_s3_test($s3_bucket, $s3_region, $s3_key, $s3_secret)
 {
   try {
-    $s3Client = Aws\S3\S3Client::factory([
+    $s3Client = new Aws\S3\S3Client([
       'version'    => 'latest',
       'region'      => $s3_region,
       'credentials' => [
@@ -3043,7 +3043,7 @@ function aws_s3_test($s3_bucket, $s3_region, $s3_key, $s3_secret)
 function aws_s3_upload($file_source, $file_name, $content_type = "")
 {
   global $system;
-  $s3Client = Aws\S3\S3Client::factory([
+  $s3Client = new Aws\S3\S3Client([
     'version'     => 'latest',
     'region'      => $system['s3_region'],
     'credentials' => [
@@ -3129,7 +3129,7 @@ function digitalocean_space_test()
 {
   global $system;
   try {
-    $s3Client = Aws\S3\S3Client::factory([
+    $s3Client = new Aws\S3\S3Client([
       'version'     => 'latest',
       'endpoint'    => 'https://' . $system['digitalocean_space_region'] . '.digitaloceanspaces.com',
       'region'      => $system['digitalocean_space_region'],
@@ -3166,7 +3166,7 @@ function digitalocean_space_test()
 function digitalocean_space_upload($file_source, $file_name, $content_type = "")
 {
   global $system;
-  $s3Client = Aws\S3\S3Client::factory([
+  $s3Client = new Aws\S3\S3Client([
     'version'     => 'latest',
     'endpoint'    => 'https://' . $system['digitalocean_space_region'] . '.digitaloceanspaces.com',
     'region'      => $system['digitalocean_space_region'],
@@ -3201,7 +3201,7 @@ function wasabi_test()
 {
   global $system;
   try {
-    $s3Client = Aws\S3\S3Client::factory([
+    $s3Client = new Aws\S3\S3Client([
       'version'     => 'latest',
       'endpoint'    => 'https://s3.' . $system['wasabi_region'] . '.wasabisys.com',
       'region'      => $system['wasabi_region'],
@@ -3238,7 +3238,7 @@ function wasabi_test()
 function wasabi_upload($file_source, $file_name, $content_type = "")
 {
   global $system;
-  $s3Client = Aws\S3\S3Client::factory([
+  $s3Client = new Aws\S3\S3Client([
     'version'     => 'latest',
     'endpoint'    => 'https://s3.' . $system['wasabi_region'] . '.wasabisys.com',
     'region'      => $system['wasabi_region'],
@@ -3282,13 +3282,13 @@ function backblaze_test()
       throw new Exception(__("Please fill in all Backblaze configuration fields (Bucket, Region, Key, Secret)"));
     }
 
-    $s3Client = Aws\S3\S3Client::factory([
-      'version'     => 'latest',
-      'endpoint'    => 'https://s3.' . $region . '.backblazeb2.com',
-      'region'      => $region,
-      'credentials' => [
-        'key'     => $key,
-        'secret'  => $secret,
+    $s3Client = new Aws\S3\S3Client([
+      'version'                 => 'latest',
+      'endpoint'                => 'https://s3.' . $region . '.backblazeb2.com',
+      'region'                  => $region,
+      'credentials'             => [
+        'key'    => $key,
+        'secret' => $secret,
       ],
       'use_path_style_endpoint' => true,
     ]);
@@ -3319,44 +3319,61 @@ function backblaze_upload($file_source, $file_name, $content_type = "")
   global $system;
   $region = trim($system['backblaze_region']);
   $bucket = trim($system['backblaze_bucket']);
-  $key = trim($system['backblaze_key']);
+  $key    = trim($system['backblaze_key']);
   $secret = trim($system['backblaze_secret']);
 
-  $s3Client = Aws\S3\S3Client::factory([
-    'version'     => 'latest',
-    'endpoint'    => 'https://s3.' . $region . '.backblazeb2.com',
-    'region'      => $region,
-    'credentials' => [
-      'key'     => $key,
-      'secret'  => $secret,
+  $s3Client = new Aws\S3\S3Client([
+    'version'                 => 'latest',
+    'endpoint'                => 'https://s3.' . $region . '.backblazeb2.com',
+    'region'                  => $region,
+    'credentials'             => [
+      'key'    => $key,
+      'secret' => $secret,
     ],
     'use_path_style_endpoint' => true,
   ]);
+
   $Key = 'uploads/' . $file_name;
-  if (empty($content_type) || $content_type == 'application/octet-stream') {
-    $content_type = mime_content_type($file_source) ?: 'image/jpeg';
+
+  if (empty($content_type) || $content_type === 'application/octet-stream') {
+    $content_type = @mime_content_type($file_source) ?: 'image/jpeg';
   }
 
-  $file_stream = fopen($file_source, 'r');
-  $put_params = [
-    'Bucket' => $bucket,
-    'Key'    => $Key,
-    'Body'   => $file_stream,
-    'ContentDisposition' => 'inline',
-    'ContentType' => $content_type,
-    'ACL'    => 'public-read',
-  ];
+  if (!file_exists($file_source) || !is_readable($file_source)) {
+    throw new Exception("Backblaze Upload Error: source file not found or not readable: " . $file_source);
+  }
+
+  $file_stream = fopen($file_source, 'rb');
+  if (!$file_stream) {
+    throw new Exception("Backblaze Upload Error: could not open file for reading: " . $file_source);
+  }
 
   try {
-    $s3Client->putObject($put_params);
+    $s3Client->putObject([
+      'Bucket'             => $bucket,
+      'Key'                => $Key,
+      'Body'               => $file_stream,
+      'ContentDisposition' => 'inline',
+      'ContentType'        => $content_type,
+    ]);
+
     if (is_resource($file_stream)) {
       fclose($file_stream);
     }
-    /* remove local temp file after successful upload */
+
+    /* remove local temp file after confirmed upload */
     gc_collect_cycles();
-    if (file_exists($file_source) && $s3Client->doesObjectExist($bucket, $Key)) {
+    if (file_exists($file_source)) {
       @unlink($file_source);
     }
+
+  } catch (Aws\Exception\AwsException $e) {
+    if (is_resource($file_stream)) {
+      @fclose($file_stream);
+    }
+    $msg = $e->getAwsErrorCode() ? '[' . $e->getAwsErrorCode() . '] ' . $e->getAwsErrorMessage() : $e->getMessage();
+    throw new Exception("Backblaze Upload Error: " . $msg);
+
   } catch (Exception $e) {
     if (is_resource($file_stream)) {
       @fclose($file_stream);
@@ -3406,28 +3423,28 @@ function backblaze_upload_keep_local($file_source, $file_name, $content_type = "
   $key = trim($system['backblaze_key']);
   $secret = trim($system['backblaze_secret']);
 
-  $s3Client = Aws\S3\S3Client::factory([
-    'version'     => 'latest',
-    'endpoint'    => 'https://s3.' . $region . '.backblazeb2.com',
-    'region'      => $region,
-    'credentials' => [
-      'key'     => $key,
-      'secret'  => $secret,
+  $s3Client = new Aws\S3\S3Client([
+    'version'                 => 'latest',
+    'endpoint'                => 'https://s3.' . $region . '.backblazeb2.com',
+    'region'                  => $region,
+    'credentials'             => [
+      'key'    => $key,
+      'secret' => $secret,
     ],
     'use_path_style_endpoint' => true,
   ]);
   $Key = 'uploads/' . $file_name;
-  if (empty($content_type) || $content_type == 'application/octet-stream') {
-    $content_type = mime_content_type($file_source) ?: 'image/jpeg';
+  if (empty($content_type) || $content_type === 'application/octet-stream') {
+    $content_type = @mime_content_type($file_source) ?: 'image/jpeg';
   }
 
-  $file_stream = fopen($file_source, 'r');
+  $file_stream = fopen($file_source, 'rb');
   $s3Client->putObject([
-    'Bucket' => $bucket,
-    'Key'    => $Key,
-    'Body'   => $file_stream,
+    'Bucket'             => $bucket,
+    'Key'                => $Key,
+    'Body'               => $file_stream,
     'ContentDisposition' => 'inline',
-    'ContentType' => $content_type,
+    'ContentType'        => $content_type,
   ]);
   if (is_resource($file_stream)) {
     fclose($file_stream);
@@ -3444,7 +3461,7 @@ function yandex_cloud_test()
 {
   global $system;
   try {
-    $s3Client = Aws\S3\S3Client::factory(array(
+    $s3Client = new Aws\S3\S3Client(array(
       'version'     => 'latest',
       'endpoint'    => 'https://s3.yandexcloud.net/' . $system['yandex_cloud_bucket'] . '/uploads/',
       'region'      => $system['yandex_cloud_region'],
@@ -3481,7 +3498,7 @@ function yandex_cloud_test()
 function yandex_cloud_upload($file_source, $file_name, $content_type = "")
 {
   global $system;
-  $s3Client = Aws\S3\S3Client::factory(array(
+  $s3Client = new Aws\S3\S3Client(array(
     'version'     => 'latest',
     'endpoint'    => 'https://s3.yandexcloud.net/',
     'region'      => $system['yandex_cloud_region'],
@@ -3583,7 +3600,7 @@ function delete_uploads_file($file_name)
   }
   if ($system['s3_enabled']) {
     /* Amazon S3 */
-    $s3Client = Aws\S3\S3Client::factory([
+    $s3Client = new Aws\S3\S3Client([
       'version'    => 'latest',
       'region'      => $system['s3_region'],
       'credentials' => [
@@ -3611,7 +3628,7 @@ function delete_uploads_file($file_name)
     }
   } elseif ($system['digitalocean_enabled']) {
     /* DigitalOcean */
-    $s3Client = Aws\S3\S3Client::factory([
+    $s3Client = new Aws\S3\S3Client([
       'version'     => 'latest',
       'endpoint'    => 'https://' . $system['digitalocean_space_region'] . '.digitaloceanspaces.com',
       'region'      => $system['digitalocean_space_region'],
@@ -3629,7 +3646,7 @@ function delete_uploads_file($file_name)
     }
   } elseif ($system['wasabi_enabled']) {
     /* Wasabi */
-    $s3Client = Aws\S3\S3Client::factory([
+    $s3Client = new Aws\S3\S3Client([
       'version'     => 'latest',
       'endpoint'    => 'https://s3.' . $system['wasabi_region'] . '.wasabisys.com',
       'region'      => $system['wasabi_region'],
@@ -3647,7 +3664,7 @@ function delete_uploads_file($file_name)
     }
   } elseif ($system['backblaze_enabled']) {
     /* Backblaze */
-    $s3Client = Aws\S3\S3Client::factory([
+    $s3Client = new Aws\S3\S3Client([
       'version'     => 'latest',
       'endpoint'    => 'https://s3.' . $system['backblaze_region'] . '.backblazeb2.com',
       'region'      => $system['backblaze_region'],
@@ -3666,7 +3683,7 @@ function delete_uploads_file($file_name)
     }
   } elseif ($system['yandex_cloud_enabled']) {
     /* Yandex Cloud */
-    $s3Client = Aws\S3\S3Client::factory(array(
+    $s3Client = new Aws\S3\S3Client(array(
       'version'     => 'latest',
       'endpoint'    => 'https://s3.yandexcloud.net/',
       'region'      => $system['yandex_cloud_region'],
