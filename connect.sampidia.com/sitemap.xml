@@ -7,7 +7,7 @@
   <!-- Main Portal -->
   <url>
     <loc>https://connect.sampidia.com/</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-08-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -15,73 +15,73 @@
   <!-- Public Modules & Content Directories -->
   <url>
     <loc>https://connect.sampidia.com/blogs</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-08-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://connect.sampidia.com/market</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-08-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://connect.sampidia.com/jobs</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-08-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://connect.sampidia.com/funding</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-08-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://connect.sampidia.com/courses</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-08-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://connect.sampidia.com/events</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-08-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://connect.sampidia.com/forums</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-08-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://connect.sampidia.com/offers</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-08-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://connect.sampidia.com/directory</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-08-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://connect.sampidia.com/games</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-08-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://connect.sampidia.com/movies</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-08-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://connect.sampidia.com/developers</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-08-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>

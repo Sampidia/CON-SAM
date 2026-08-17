@@ -116,9 +116,9 @@ try {
   $country_query = "";
 
   // prepare distance
+  $distance = null;
   if ($user->_logged_in && $system['location_finder_enabled'] && isset($_GET['distance']) && is_numeric($_GET['distance'])) {
     /* validate distance */
-    $distance = $_GET['distance'];
     $unit = ($system['system_distance'] == "mile") ? 3958 : 6371;
     $distance = ($_GET['distance'] && is_numeric($_GET['distance']) && $_GET['distance'] > 0) ? $_GET['distance'] : 25;
     $distance_clause = sprintf("(%s * acos(cos(radians(%s)) * cos(radians(post_latitude)) * cos(radians(post_longitude) - radians(%s)) + sin(radians(%s)) * sin(radians(post_latitude))) ) AS distance ", secure($unit, 'int'), secure($user->_data['user_latitude']), secure($user->_data['user_longitude']), secure($user->_data['user_latitude']));
@@ -127,8 +127,9 @@ try {
   }
 
   // prepare sort
+  $sort = $_GET['sort'] ?? '';
   $order_query .= ($order_query) ? "," : " ORDER BY ";
-  switch ($_GET['sort']) {
+  switch ($sort) {
     case '':
     case 'latest':
       $order_query .= " posts.post_id DESC ";
@@ -148,6 +149,7 @@ try {
   }
 
   // prepare country 
+  $selected_country = null;
   if ($system['newsfeed_location_filter_enabled'] && isset($_GET['country']) && $_GET['country'] != "all") {
     /* get selected country */
     $selected_country = $user->get_country_by_name($_GET['country']);
@@ -168,7 +170,7 @@ try {
   $params['total_items'] = $total->fetch_assoc()['count'];
   $params['items_per_page'] = $system['offers_results'];
   $params['url'] = $system['system_url'] . '/offers' . $url . '/%s';
-  if (isset($selected_country)) {
+  if ($selected_country) {
     $params['url'] .= "?country=" . $selected_country['country_name'];
   }
   if (isset($_GET['distance'])) {
@@ -193,7 +195,7 @@ try {
     }
   }
   /* assign variables */
-  $smarty->assign('sort', $_GET['sort']);
+  $smarty->assign('sort', $sort);
   $smarty->assign('distance', ($distance) ? htmlentities($distance, ENT_QUOTES, 'utf-8') : '');
   $smarty->assign('rows', $rows);
   $smarty->assign('total', $params['total_items']);

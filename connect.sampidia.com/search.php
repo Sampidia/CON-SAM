@@ -53,7 +53,7 @@ try {
 }
 
 // page header
-page_header(__("Search") . ' | ' . __($system['system_title']));
+page_header(__("Search") . ' | ' . __($system['system_title']), '', '', 'noindex, follow');
 
 // page footer
 page_footer('search');

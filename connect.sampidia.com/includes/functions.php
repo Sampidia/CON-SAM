@@ -987,11 +987,12 @@ function _error()
 
       case 'PERMISSION':
         global $smarty;
+        header('HTTP/1.0 403 Forbidden');
         $title = __("Permission Needed");
-        $message = ($args[1]) ? $args[1] : __("You do not have the permission to view this content");
+        $message = (isset($args[1]) && $args[1]) ? $args[1] : __("You do not have the permission to view this content");
         if (isset($smarty)) {
           $smarty->assign('message', $message);
-          page_header($title);
+          page_header($title, '', '', 'noindex, follow');
           page_footer('permission');
           exit;
         }
@@ -6880,7 +6881,7 @@ function popover($uid, $username, $name)
  * @param string $description
  * @return void
  */
-function page_header($title, $description = '', $image = '')
+function page_header($title, $description = '', $image = '', $meta_robots = 'index, follow')
 {
   global $smarty, $system;
   $description = ($description != '') ? $description : __($system['system_description']);
@@ -6891,9 +6892,18 @@ function page_header($title, $description = '', $image = '')
       $image = $system['system_url'] . '/content/themes/' . $system['theme'] . '/images/og-image.jpg';
     }
   }
+
+  /* canonical url */
+  $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http";
+  $host = $_SERVER['HTTP_HOST'] ?? 'connect.sampidia.com';
+  $request_uri = strtok($_SERVER['REQUEST_URI'] ?? '/', '?');
+  $canonical_url = $scheme . "://" . $host . $request_uri;
+
   $smarty->assign('page_title', $title);
   $smarty->assign('page_description', $description);
   $smarty->assign('page_image', $image);
+  $smarty->assign('canonical_url', $canonical_url);
+  $smarty->assign('meta_robots', $meta_robots);
 }
 
 

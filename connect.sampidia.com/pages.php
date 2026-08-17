@@ -18,12 +18,14 @@ if (!$system['pages_enabled']) {
 try {
 
   // get selected country
+  $selected_country = null;
   if (isset($_GET['country'])) {
     /* get selected country */
     $selected_country = $user->get_country_by_name($_GET['country']);
     /* assign variables */
     $smarty->assign('selected_country', $selected_country);
   }
+  $country_id = ($selected_country && isset($selected_country['country_id'])) ? $selected_country['country_id'] : null;
 
   // get view content
   switch ($_GET['view']) {
@@ -40,7 +42,7 @@ try {
       $smarty->assign('categories', $user->get_categories("pages_categories"));
 
       // get new pages
-      $pages = $user->get_pages(['suggested' => true, 'country' => $selected_country['country_id']]);
+      $pages = $user->get_pages(['suggested' => true, 'country' => $country_id]);
       /* assign variables */
       $smarty->assign('pages', $pages);
       $smarty->assign('get', "suggested_pages");
@@ -74,7 +76,7 @@ try {
       $smarty->assign('categories', $categories);
 
       // get category pages
-      $pages = $user->get_pages(['suggested' => true, 'category_id' => $_GET['category_id'], 'country' => $selected_country['country_id']]);
+      $pages = $user->get_pages(['suggested' => true, 'category_id' => $_GET['category_id'], 'country' => $country_id]);
       /* assign variables */
       $smarty->assign('pages', $pages);
       $smarty->assign('get', "category_pages");
@@ -89,7 +91,7 @@ try {
       page_header(__("Liked Pages") . ' | ' . __($system['system_title']));
 
       // get liked pages
-      $pages = $user->get_pages(['user_id' => $user->_data['user_id'], 'country' => $selected_country['country_id']]);
+      $pages = $user->get_pages(['user_id' => $user->_data['user_id'], 'country' => $country_id]);
       /* assign variables */
       $smarty->assign('pages', $pages);
       $smarty->assign('get', "liked_pages");
@@ -104,7 +106,7 @@ try {
       page_header(__("My Pages") . ' | ' . __($system['system_title']));
 
       // get managed pages
-      $pages = $user->get_pages(['managed' => true, 'user_id' => $user->_data['user_id'], 'country' => $selected_country['country_id']]);
+      $pages = $user->get_pages(['managed' => true, 'user_id' => $user->_data['user_id'], 'country' => $country_id]);
       /* assign variables */
       $smarty->assign('pages', $pages);
       $smarty->assign('get', "pages");

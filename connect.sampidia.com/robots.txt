@@ -17,7 +17,12 @@ Disallow: /admincp
 Disallow: /modcp
 
 
-# Protect user privacy areas
+# Parameter & Search Control
+Disallow: /*?lang=*
+Disallow: /*?ref=*
+Disallow: /search/
+
+# Protect user privacy & thin sub-pages
 Disallow: /login/
 Disallow: /register/
 Disallow: /profile/
@@ -27,6 +32,11 @@ Disallow: /settings/
 Disallow: /private/
 Disallow: /account/
 Disallow: /dashboard/
+Disallow: /*/likes$
+Disallow: /*/subscriptions$
+Disallow: /*/followers$
+Disallow: /*/followings$
+Disallow: /*/events$
 
 ########################################
 # PROTECT USER GENERATED PRIVATE DATA

@@ -16,6 +16,10 @@
     <!-- Meta -->
     <meta name="description" content="{$page_description|truncate:300}">
     <meta name="keywords" content="{$system['system_keywords']}">
+    <meta name="robots" content="{$meta_robots|default:'index, follow'}">
+    {if $canonical_url}
+    <link rel="canonical" href="{$canonical_url}" />
+    {/if}
     <!-- Meta -->
 
     <!-- OG-Meta -->

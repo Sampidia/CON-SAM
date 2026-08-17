@@ -29,6 +29,7 @@ try {
       page_header(__("Blogs") . ' | ' . __($system['system_title']), __($system['system_description_blogs']));
 
       // get selected country
+      $selected_country = null;
       if (isset($_GET['country'])) {
         /* get selected country */
         $selected_country = $user->get_country_by_name($_GET['country']);
@@ -37,7 +38,8 @@ try {
       }
 
       // get blogs
-      $smarty->assign('blogs', $user->get_blogs(['country' => $selected_country['country_id']]));
+      $country_id = ($selected_country && isset($selected_country['country_id'])) ? $selected_country['country_id'] : null;
+      $smarty->assign('blogs', $user->get_blogs(['country' => $country_id]));
       break;
 
     case 'category':
@@ -53,6 +55,7 @@ try {
       page_header(__("Blogs") . ' &rsaquo; ' . __($category['category_name']) . ' | ' . __($system['system_title']), __($category['category_description']));
 
       // get selected country
+      $selected_country = null;
       if (isset($_GET['country'])) {
         /* get selected country */
         $selected_country = $user->get_country_by_name($_GET['country']);
@@ -61,7 +64,8 @@ try {
       }
 
       // get blogs
-      $smarty->assign('blogs', $user->get_blogs(["category" => $_GET['category_id'], 'country' => $selected_country['country_id']]));
+      $country_id = ($selected_country && isset($selected_country['country_id'])) ? $selected_country['country_id'] : null;
+      $smarty->assign('blogs', $user->get_blogs(["category" => $_GET['category_id'], 'country' => $country_id]));
 
       // get blogs categories (sub-categories & only parents)
       $smarty->assign('blogs_categories', $user->get_categories("blogs_categories", $_GET['category_id'], false, true));
