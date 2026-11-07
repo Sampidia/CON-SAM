@@ -290,7 +290,7 @@
           </a>
         {/if}
         {if $system['events_enabled'] && $system['pages_events_enabled']}
-          <a href="{$system['system_url']}/pages/{$spage['page_name']}/events" {if $view == "events"}class="active" {/if}>
+          <a href="{$system['system_url']}/pages/{$spage['page_name']}/events" rel="nofollow" {if $view == "events"}class="active" {/if}>
             {include file='__svg_icons.tpl' icon="events" class="main-icon mr5" width="24px" height="24px"}
             <span class="ml5 d-none d-xl-inline-block">{__("Events")}</span>
           </a>
@@ -637,10 +637,10 @@
               <div class="card">
                 <div class="card-header bg-transparent">
                   <div class="float-end">
-                    <small><a href="{$system['system_url']}/pages/{$spage['page_name']}/events">{__("See All")}</a></small>
+                    <small><a href="{$system['system_url']}/pages/{$spage['page_name']}/events" rel="nofollow">{__("See All")}</a></small>
                   </div>
                   {include file='__svg_icons.tpl' icon="events" class="main-icon mr5" width="24px" height="24px"}
-                  <strong><a href="{$system['system_url']}/pages/{$spage['page_name']}/events">{__("Events")}</a></strong>
+                  <strong><a href="{$system['system_url']}/pages/{$spage['page_name']}/events" rel="nofollow">{__("Events")}</a></strong>
                 </div>
                 <div class="card-body with-list">
                   <ul>

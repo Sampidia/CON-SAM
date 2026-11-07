@@ -299,7 +299,8 @@ try {
 }
 
 // page header
-page_header($event['event_title'], $event['event_description'], $event['event_cover']);
+$meta_robots = in_array($_GET['view'], ['going', 'interested', 'invited', 'invites', 'search', 'settings']) ? 'noindex, follow' : 'index, follow';
+page_header($event['event_title'], $event['event_description'], $event['event_cover'], $meta_robots);
 
 // assign variables
 $smarty->assign('event', $event);

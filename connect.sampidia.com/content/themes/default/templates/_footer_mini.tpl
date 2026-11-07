@@ -9,7 +9,7 @@
     <div class="dropdown-menu dropdown-menu-end">
       <div class="js_scroller">
         {foreach $system['languages'] as $language}
-          <a class="dropdown-item" href="?lang={$language['code']}">
+          <a class="dropdown-item" href="?lang={$language['code']}" rel="nofollow">
             <img width="16" height="16" class="mr10" src="{$language['flag']}">{$language['title']}
           </a>
         {/foreach}

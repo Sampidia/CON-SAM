@@ -6314,7 +6314,7 @@ class User
             $db->query(sprintf("INSERT INTO hashtags_posts (post_id, hashtag_id, created_at) VALUES (%s, %s, %s)", secure($post_id, 'int'), secure($hashtag_id, 'int'), secure($date)));
           }
         }
-        return $matches[1] . '<a href="' . $system['system_url'] . '/search/hashtag/' . $matches[4] . '">' . $matches[2] . '</a>';
+        return $matches[1] . '<a href="' . $system['system_url'] . '/search/hashtag/' . $matches[4] . '" rel="nofollow">' . $matches[2] . '</a>';
       }, $text);
     }
     return $text;

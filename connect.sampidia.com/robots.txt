@@ -1,6 +1,5 @@
-
 # robots.txt for Connect.Sampidia.com
-# Last Updated: 2026-02-12
+# Last Updated: 2026-11-07
 
 ########################################
 # GLOBAL ACCESS
@@ -9,34 +8,38 @@
 User-agent: *
 Allow: /
 
-Disallow: /content/backups
-Disallow: /content/languages
-Disallow: /includes/libs
-Disallow: /install
-Disallow: /admincp
-Disallow: /modcp
+# Allow static assets and themes for proper rendering
+Allow: /content/themes/
+Allow: /content/uploads/
 
+# System & Admin Control
+Disallow: /content/backups/
+Disallow: /content/languages/
+Disallow: /includes/libs/
+Disallow: /install/
+Disallow: /admincp/
+Disallow: /modcp/
+Disallow: /api/
+Disallow: /webhooks/
 
-# Parameter & Search Control
-Disallow: /*?lang=*
-Disallow: /*?ref=*
-Disallow: /search/
-
-# Protect user privacy & thin sub-pages
+# Auth & Account Control
 Disallow: /login/
 Disallow: /register/
-Disallow: /profile/
+Disallow: /signin/
+Disallow: /signup/
+Disallow: /signout/
+Disallow: /reset/
+Disallow: /activation/
+Disallow: /connect/
+Disallow: /revoke/
+Disallow: /started/
+Disallow: /wallet/
 Disallow: /messages/
 Disallow: /notifications/
 Disallow: /settings/
 Disallow: /private/
 Disallow: /account/
 Disallow: /dashboard/
-Disallow: /*/likes$
-Disallow: /*/subscriptions$
-Disallow: /*/followers$
-Disallow: /*/followings$
-Disallow: /*/events$
 
 ########################################
 # PROTECT USER GENERATED PRIVATE DATA

@@ -448,7 +448,8 @@ try {
 }
 
 // page header
-page_header($profile['name'], $profile['user_biography'], $profile['user_picture']);
+$meta_robots = in_array($_GET['view'], ['friends', 'followers', 'followings', 'subscribers', 'subscriptions', 'likes', 'events', 'search']) ? 'noindex, follow' : 'index, follow';
+page_header($profile['name'], $profile['user_biography'], $profile['user_picture'], $meta_robots);
 
 // assign variables
 $smarty->assign('profile', $profile);

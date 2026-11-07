@@ -291,7 +291,7 @@
           {include file='__svg_icons.tpl' icon="newsfeed" class="main-icon mr5" width="24px" height="24px"}
           <span class="ml5 d-none d-xxl-inline-block">{__("Timeline")}</span>
         </a>
-        <a href="{$system['system_url']}/{$profile['user_name']}/{if $system['friends_enabled']}friends{else}followers{/if}" {if $view == "friends" || $view == "followers" || $view == "followings"}class="active" {/if}>
+        <a href="{$system['system_url']}/{$profile['user_name']}/{if $system['friends_enabled']}friends{else}followers{/if}" rel="nofollow" {if $view == "friends" || $view == "followers" || $view == "followings"}class="active" {/if}>
           {include file='__svg_icons.tpl' icon="friends" class="main-icon mr5" width="24px" height="24px"}
           <span class="ml5 d-none d-xxl-inline-block">{if $system['friends_enabled']}{__("Friends")}{else}{__("Followers")}{/if}</span>
         </a>
@@ -317,7 +317,7 @@
           </a>
         {/if}
         {if $system['pages_enabled']}
-          <a href="{$system['system_url']}/{$profile['user_name']}/likes" {if $view == "likes"}class="active" {/if}>
+          <a href="{$system['system_url']}/{$profile['user_name']}/likes" rel="nofollow" {if $view == "likes"}class="active" {/if}>
             {include file='__svg_icons.tpl' icon="pages" class="main-icon mr5" width="24px" height="24px"}
             <span class="ml5 d-none d-xxl-inline-block">{__("Likes")}</span>
           </a>
@@ -329,7 +329,7 @@
           </a>
         {/if}
         {if $system['events_enabled']}
-          <a href="{$system['system_url']}/{$profile['user_name']}/events" {if $view == "events"}class="active" {/if}>
+          <a href="{$system['system_url']}/{$profile['user_name']}/events" rel="nofollow" {if $view == "events"}class="active" {/if}>
             {include file='__svg_icons.tpl' icon="events" class="main-icon mr5" width="24px" height="24px"}
             <span class="ml5 d-none d-xxl-inline-block">{__("Events")}</span>
           </a>
@@ -980,7 +980,7 @@
               <div class="card">
                 <div class="card-header bg-transparent">
                   {include file='__svg_icons.tpl' icon="pages" class="main-icon mr5" width="24px" height="24px"}
-                  <strong><a href="{$system['system_url']}/{$profile['user_name']}/likes">{__("Likes")}</a></strong>
+                  <strong><a href="{$system['system_url']}/{$profile['user_name']}/likes" rel="nofollow">{__("Likes")}</a></strong>
                 </div>
                 <div class="card-body ptb10 plr10">
                   <div class="row">
@@ -1034,7 +1034,7 @@
               <div class="card">
                 <div class="card-header bg-transparent">
                   {include file='__svg_icons.tpl' icon="events" class="main-icon mr5" width="24px" height="24px"}
-                  <strong><a href="{$system['system_url']}/{$profile['user_name']}/events">{__("Events")}</a></strong>
+                  <strong><a href="{$system['system_url']}/{$profile['user_name']}/events" rel="nofollow">{__("Events")}</a></strong>
                 </div>
                 <div class="card-body ptb10 plr10">
                   <div class="row">

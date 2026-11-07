@@ -399,7 +399,8 @@ try {
 }
 
 // page header
-page_header($spage['page_title'], $spage['page_description'], $spage['page_picture']);
+$meta_robots = in_array($_GET['view'], ['events', 'activities', 'subscribers', 'invites', 'search', 'settings']) ? 'noindex, follow' : 'index, follow';
+page_header($spage['page_title'], $spage['page_description'], $spage['page_picture'], $meta_robots);
 
 // assign variables
 $smarty->assign('spage', $spage);

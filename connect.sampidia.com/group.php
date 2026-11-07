@@ -373,6 +373,8 @@ try {
 
 // page header
 page_header($group['group_title'], $group['group_description'], $group['group_picture']);
+$meta_robots = in_array($_GET['view'], ['members', 'subscribers', 'invites', 'search', 'settings']) ? 'noindex, follow' : 'index, follow';
+page_header($group['group_title'], $group['group_description'], $group['group_picture'], $meta_robots);
 
 // assign variables
 $smarty->assign('group', $group);
