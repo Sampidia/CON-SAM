@@ -11,6 +11,8 @@
 require('bootloader.php');
 
 try {
+  $selected_country = null;
+  $_GET['view'] = $_GET['view'] ?? '';
 
   // check user logged in
   if (!$user->_logged_in) {
@@ -45,8 +47,9 @@ try {
       // newsfeed location filter
       if ($system['newsfeed_location_filter_enabled']) {
         // get countries if not defined
-        if (!$countries) {
-          $smarty->assign('countries', $user->get_countries());
+        if (!isset($countries) || !$countries) {
+          $countries = $user->get_countries();
+          $smarty->assign('countries', $countries);
         }
 
         // get selected country
@@ -65,7 +68,8 @@ try {
       }
 
       // get posts (newsfeed)
-      $posts = ($selected_country) ? $user->get_posts(['country' => $selected_country['country_id']]) : $user->get_posts();
+      $country_id = ($selected_country && isset($selected_country['country_id'])) ? $selected_country['country_id'] : null;
+      $posts = ($country_id) ? $user->get_posts(['country' => $country_id]) : $user->get_posts();
       /* assign variables */
       $smarty->assign('posts', $posts);
 
@@ -128,9 +132,10 @@ try {
         }
 
         // get posts (newsfeed)
+        $country_id = ($selected_country && isset($selected_country['country_id'])) ? $selected_country['country_id'] : null;
         if ($system['newsfeed_merge_enabled']) {
           /* first get the posts from normal newsfeed */
-          $posts_newsfeed = ($selected_country) ? $user->get_posts(['country' => $selected_country['country_id'], 'results' => $system['merge_recent_results']]) : $user->get_posts(['results' => $system['merge_recent_results']]);
+          $posts_newsfeed = ($country_id) ? $user->get_posts(['country' => $country_id, 'results' => $system['merge_recent_results']]) : $user->get_posts(['results' => $system['merge_recent_results']]);
           /* second get the posts from popular */
           $posts_popular = $user->get_posts(['get' => 'popular', 'results' => $system['merge_popular_results']]);
           $posts_popular = array_map(function ($element) {
@@ -146,7 +151,7 @@ try {
           /* merge the three arrays */
           $posts = array_merge($posts_newsfeed, $posts_popular, $posts_discover);
         } else {
-          $posts = ($selected_country) ? $user->get_posts(['country' => $selected_country['country_id']]) : $user->get_posts();
+          $posts = ($country_id) ? $user->get_posts(['country' => $country_id]) : $user->get_posts();
         }
         /* if empty posts -> clear cache and reload */
         if (empty($posts)) {
@@ -322,7 +327,7 @@ try {
             /* assign variables */
             $smarty->assign('selected_country', $selected_country);
           } else {
-            $user_country = get_user_language_country()['country'];
+            $user_country = get_user_language_country()['country'] ?? null;
             if ($system['auto_language_detection'] && $user_country) {
               $selected_country = $user->get_country_by_code($user_country);
               /* assign variables */
@@ -332,10 +337,11 @@ try {
         }
 
         // get posts (watch)
+        $country_id = ($selected_country && isset($selected_country['country_id'])) ? $selected_country['country_id'] : null;
         /* first get the videos from public */
-        $posts_discover = ($selected_country) ? $user->get_posts(['get' => 'discover', 'filter' => 'video', 'country' => $selected_country['country_id']]) : $user->get_posts(['get' => 'discover', 'filter' => 'video']);
+        $posts_discover = ($country_id) ? $user->get_posts(['get' => 'discover', 'filter' => 'video', 'country' => $country_id]) : $user->get_posts(['get' => 'discover', 'filter' => 'video']);
         /* second get the videos from friends */
-        $posts_friends = ($selected_country) ? $user->get_posts(['get' => 'newsfeed', 'filter' => 'video', 'country' => $selected_country['country_id']]) : $user->get_posts(['get' => 'newsfeed', 'filter' => 'video']);
+        $posts_friends = ($country_id) ? $user->get_posts(['get' => 'newsfeed', 'filter' => 'video', 'country' => $country_id]) : $user->get_posts(['get' => 'newsfeed', 'filter' => 'video']);
         /* merge the two arrays */
         $posts = array_merge($posts_discover, $posts_friends);
         /* assign variables */
@@ -410,7 +416,7 @@ try {
   $widgets = $user->widgets('home');
   /* assign variables */
   $smarty->assign('widgets', $widgets);
-} catch (Exception $e) {
+} catch (Throwable $e) {
   _error(__("Error"), $e->getMessage());
 }
 

@@ -394,17 +394,17 @@ try {
   if (isset($_GET['ref']) && $_GET['ref'] == "qs") {
     $user->set_search_log($spage['page_id'], 'page');
   }
-} catch (Exception $e) {
+} catch (Throwable $e) {
   _error(__("Error"), $e->getMessage());
 }
 
 // page header
-$meta_robots = in_array($_GET['view'], ['events', 'activities', 'subscribers', 'invites', 'search', 'settings']) ? 'noindex, follow' : 'index, follow';
-page_header($spage['page_title'], $spage['page_description'], $spage['page_picture'], $meta_robots);
+$meta_robots = in_array($_GET['view'] ?? '', ['events', 'activities', 'subscribers', 'invites', 'search', 'settings']) ? 'noindex, follow' : 'index, follow';
+page_header($spage['page_title'] ?? '', $spage['page_description'] ?? '', $spage['page_picture'] ?? '', $meta_robots);
 
 // assign variables
 $smarty->assign('spage', $spage);
-$smarty->assign('view', $_GET['view']);
+$smarty->assign('view', $_GET['view'] ?? '');
 
 // page footer
 page_footer('page');

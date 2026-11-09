@@ -443,17 +443,17 @@ try {
   if (isset($_GET['ref']) && $_GET['ref'] == "qs") {
     $user->set_search_log($profile['user_id'], 'user');
   }
-} catch (Exception $e) {
+} catch (Throwable $e) {
   _error(__("Error"), $e->getMessage());
 }
 
 // page header
-$meta_robots = in_array($_GET['view'], ['friends', 'followers', 'followings', 'subscribers', 'subscriptions', 'likes', 'events', 'search']) ? 'noindex, follow' : 'index, follow';
-page_header($profile['name'], $profile['user_biography'], $profile['user_picture'], $meta_robots);
+$meta_robots = in_array($_GET['view'] ?? '', ['friends', 'followers', 'followings', 'subscribers', 'subscriptions', 'likes', 'events', 'search']) ? 'noindex, follow' : 'index, follow';
+page_header($profile['name'] ?? '', $profile['user_biography'] ?? '', $profile['user_picture'] ?? '', $meta_robots);
 
 // assign variables
 $smarty->assign('profile', $profile);
-$smarty->assign('view', $_GET['view']);
+$smarty->assign('view', $_GET['view'] ?? '');
 
 // page footer
 page_footer('profile');

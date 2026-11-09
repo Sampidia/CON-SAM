@@ -168,9 +168,9 @@
               {/if}
             </button>
             <div class="dropdown-menu dropdown-menu-end">
-              <a href="?{if $selected_country}country={$selected_country['country_name']}&{/if}{if $distance}distance={$distance}&{/if}sort=latest" class="dropdown-item"><i class="fas fa-bars fa-fw mr10"></i>{__("Latest")}</a>
-              <a href="?{if $selected_country}country={$selected_country['country_name']}&{/if}{if $distance}distance={$distance}&{/if}sort=expire-soon" class="dropdown-item"><i class="fas fa-sort-amount-down fa-fw mr10"></i>{__("Expire Soon")}</a>
-              <a href="?{if $selected_country}country={$selected_country['country_name']}&{/if}{if $distance}distance={$distance}&{/if}sort=expire-latest" class="dropdown-item"><i class="fas fa-sort-amount-down-alt fa-fw mr10"></i>{__("Expire Latest")}</a>
+              <a href="?{if $selected_country}country={$selected_country['country_name']}&{/if}{if $distance}distance={$distance}&{/if}sort=latest" class="dropdown-item" rel="nofollow"><i class="fas fa-bars fa-fw mr10"></i>{__("Latest")}</a>
+              <a href="?{if $selected_country}country={$selected_country['country_name']}&{/if}{if $distance}distance={$distance}&{/if}sort=expire-soon" class="dropdown-item" rel="nofollow"><i class="fas fa-sort-amount-down fa-fw mr10"></i>{__("Expire Soon")}</a>
+              <a href="?{if $selected_country}country={$selected_country['country_name']}&{/if}{if $distance}distance={$distance}&{/if}sort=expire-latest" class="dropdown-item" rel="nofollow"><i class="fas fa-sort-amount-down-alt fa-fw mr10"></i>{__("Expire Latest")}</a>
             </div>
           </div>
         </div>
@@ -224,11 +224,11 @@
             </button>
             <div class="dropdown-menu dropdown-menu-end countries-dropdown">
               <div class="js_scroller">
-                <a class="dropdown-item" href="?{if $distance}distance={$distance}{if $sort}&{/if}{/if}{if $sort}sort={$sort}{/if}">
+                <a class="dropdown-item" href="?{if $distance}distance={$distance}{if $sort}&{/if}{/if}{if $sort}sort={$sort}{/if}" rel="nofollow">
                   {__("All Countries")}
                 </a>
                 {foreach $countries as $country}
-                  <a class="dropdown-item" href="?country={$country['country_name_native']}{if $distance}&distance={$distance}{/if}{if $sort}&sort={$sort}{/if}">
+                  <a class="dropdown-item" href="?country={$country['country_name_native']}{if $distance}&distance={$distance}{/if}{if $sort}&sort={$sort}{/if}" rel="nofollow">
                     {$country['country_name']}
                   </a>
                 {/foreach}

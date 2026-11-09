@@ -71,6 +71,16 @@ Options -MultiViews
 
 ## RewriteEngine ##
 RewriteEngine on
+
+## Block cgi-sys paths — these are legacy cPanel suspended-page URLs.
+## Return 410 Gone so Google removes them from the index cleanly.
+RewriteRule ^cgi-sys/ - [R=410,L]
+RewriteRule ^cgi-bin/ - [R=410,L]
+
+## Block direct directory browsing of uploads folder.
+## Requests to /content/uploads (no specific file) return 403.
+RewriteRule ^content/uploads/?$ - [F,L]
+RewriteRule ^content/uploads/$ - [F,L]
 ## OPTIONAL: Uploads Permission for Non-Logged In Users ##
 # RewriteCond %{REQUEST_FILENAME} -s
 # RewriteRule ^content/uploads/((files|photos|sounds|videos)/.*)$ files.php?file=$1 [L,QSA]

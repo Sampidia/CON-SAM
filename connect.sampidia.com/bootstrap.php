@@ -65,7 +65,7 @@ $gettextTranslator->register();
 // init database connection
 try {
   $db = init_db_connection();
-} catch (Exception $e) {
+} catch (Throwable $e) {
   _error('DB_ERROR');
 }
 
@@ -74,7 +74,7 @@ try {
 global $system;
 try {
   init_system($system);
-} catch (Exception $e) {
+} catch (Throwable $e) {
   _error(__("Error"), $e->getMessage());
 }
 
@@ -88,7 +88,7 @@ global $user;
 require_once(ABSPATH . 'includes/class-user.php');
 try {
   $user = new User();
-} catch (Exception $e) {
+} catch (Throwable $e) {
   _error(__("Error"), $e->getMessage());
 }
 

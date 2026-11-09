@@ -294,17 +294,17 @@ try {
   if (isset($_GET['ref']) && $_GET['ref'] == "qs") {
     $user->set_search_log($event['event_id'], 'event');
   }
-} catch (Exception $e) {
+} catch (Throwable $e) {
   _error(__("Error"), $e->getMessage());
 }
 
 // page header
-$meta_robots = in_array($_GET['view'], ['going', 'interested', 'invited', 'invites', 'search', 'settings']) ? 'noindex, follow' : 'index, follow';
-page_header($event['event_title'], $event['event_description'], $event['event_cover'], $meta_robots);
+$meta_robots = in_array($_GET['view'] ?? '', ['going', 'interested', 'invited', 'invites', 'search', 'settings']) ? 'noindex, follow' : 'index, follow';
+page_header($event['event_title'] ?? '', $event['event_description'] ?? '', $event['event_cover'] ?? '', $meta_robots);
 
 // assign variables
 $smarty->assign('event', $event);
-$smarty->assign('view', $_GET['view']);
+$smarty->assign('view', $_GET['view'] ?? '');
 
 // page footer
 page_footer('event');

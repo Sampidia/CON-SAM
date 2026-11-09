@@ -43,11 +43,11 @@
             </a>
             <div class="dropdown-menu dropdown-menu-end countries-dropdown">
               <div class="js_scroller">
-                <a class="dropdown-item" href="?country=all">
+                <a class="dropdown-item" href="?country=all" rel="nofollow">
                   {__("All Countries")}
                 </a>
                 {foreach $countries as $country}
-                  <a class="dropdown-item" href="?country={$country['country_name_native']}">
+                  <a class="dropdown-item" href="?country={$country['country_name_native']}" rel="nofollow">
                     {$country['country_name']}
                   </a>
                 {/foreach}

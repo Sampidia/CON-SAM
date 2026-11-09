@@ -62,6 +62,6 @@ try {
   $ads_master['footer'] = $user->ads('footer');
   /* assign variables */
   $smarty->assign('ads_master', $ads_master);
-} catch (Exception $e) {
+} catch (Throwable $e) {
   _error(__("Error"), $e->getMessage());
 }

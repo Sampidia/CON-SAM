@@ -49,12 +49,12 @@ try {
   $smarty->assign('widgets', $widgets);
 } catch (PrivacyException $e) {
   _error('PERMISSION');
-} catch (Exception $e) {
+} catch (Throwable $e) {
   _error(__("Error"), $e->getMessage());
 }
 
 // page header
-page_header($post['og_title'], $post['og_description'], $post['og_image']);
+page_header($post['og_title'] ?? '', $post['og_description'] ?? '', $post['og_image'] ?? '');
 
 // page footer
 page_footer('post');

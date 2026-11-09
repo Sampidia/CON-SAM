@@ -387,52 +387,85 @@ function init_system(&$system)
 
   /* set system langauge */
   $system['current_language'] = DEFAULT_LOCALE;
-  $user_language = get_user_language_country()['language'];
-  if (isset($_GET['lang'])) {
+  $user_language = get_user_language_country()['language'] ?? null;
+  if (isset($_GET['lang']) && array_key_exists($_GET['lang'], $system['languages'])) {
     /* get GET for web app */
-    if (array_key_exists($_GET['lang'], $system['languages'])) {
-      $system['language'] = $system['languages'][$_GET['lang']];
-      if ($system['language']['code'] != DEFAULT_LOCALE) {
-        $gettextTranslator->loadTranslations(Gettext\Translations::fromPoFile(ABSPATH . 'content/languages/locale/' . $system['language']['code'] . '/LC_MESSAGES/messages.po'));
+    $system['language'] = $system['languages'][$_GET['lang']];
+    if ($system['language']['code'] != DEFAULT_LOCALE) {
+      $po_file = ABSPATH . 'content/languages/locale/' . $system['language']['code'] . '/LC_MESSAGES/messages.po';
+      if (file_exists($po_file)) {
+        try {
+          $gettextTranslator->loadTranslations(Gettext\Translations::fromPoFile($po_file));
+        } catch (Throwable $e) {
+        }
       }
-      $system['current_language'] = $system['language']['code'];
-      /* set language cookie */
-      set_cookie('s_lang', $_GET['lang']);
     }
-  } elseif (isset($_COOKIE['s_lang'])) {
+    $system['current_language'] = $system['language']['code'];
+    /* set language cookie */
+    set_cookie('s_lang', $_GET['lang']);
+  } elseif (isset($_COOKIE['s_lang']) && array_key_exists($_COOKIE['s_lang'], $system['languages'])) {
     /* get cookie for web app */
-    if (array_key_exists($_COOKIE['s_lang'], $system['languages'])) {
-      $system['language'] = $system['languages'][$_COOKIE['s_lang']];
-      if ($system['language']['code'] != DEFAULT_LOCALE) {
-        $gettextTranslator->loadTranslations(Gettext\Translations::fromPoFile(ABSPATH . 'content/languages/locale/' . $system['language']['code'] . '/LC_MESSAGES/messages.po'));
+    $system['language'] = $system['languages'][$_COOKIE['s_lang']];
+    if ($system['language']['code'] != DEFAULT_LOCALE) {
+      $po_file = ABSPATH . 'content/languages/locale/' . $system['language']['code'] . '/LC_MESSAGES/messages.po';
+      if (file_exists($po_file)) {
+        try {
+          $gettextTranslator->loadTranslations(Gettext\Translations::fromPoFile($po_file));
+        } catch (Throwable $e) {
+        }
       }
-      $system['current_language'] = $system['language']['code'];
     }
-  } elseif (isset(_getallheaders()["x-lang"])) {
+    $system['current_language'] = $system['language']['code'];
+  } elseif (isset(_getallheaders()["x-lang"]) && array_key_exists(_getallheaders()["x-lang"], $system['languages'])) {
     /* get header for web app */
-    if (array_key_exists(_getallheaders()["x-lang"], $system['languages'])) {
-      $system['language'] = $system['languages'][_getallheaders()["x-lang"]];
-      if ($system['language']['code'] != DEFAULT_LOCALE) {
-        $gettextTranslator->loadTranslations(Gettext\Translations::fromPoFile(ABSPATH . 'content/languages/locale/' . $system['language']['code'] . '/LC_MESSAGES/messages.po'));
+    $system['language'] = $system['languages'][_getallheaders()["x-lang"]];
+    if ($system['language']['code'] != DEFAULT_LOCALE) {
+      $po_file = ABSPATH . 'content/languages/locale/' . $system['language']['code'] . '/LC_MESSAGES/messages.po';
+      if (file_exists($po_file)) {
+        try {
+          $gettextTranslator->loadTranslations(Gettext\Translations::fromPoFile($po_file));
+        } catch (Throwable $e) {
+        }
       }
-      $system['current_language'] = $system['language']['code'];
     }
-  } elseif ($system['auto_language_detection'] && $user_language) {
+    $system['current_language'] = $system['language']['code'];
+  } elseif ($system['auto_language_detection'] && $user_language && array_key_exists($user_language, $system['languages'])) {
     /* get user language */
-    if (array_key_exists($user_language, $system['languages'])) {
-      $system['language'] = $system['languages'][$user_language];
-      if ($system['language']['code'] != DEFAULT_LOCALE) {
-        $gettextTranslator->loadTranslations(Gettext\Translations::fromPoFile(ABSPATH . 'content/languages/locale/' . $system['language']['code'] . '/LC_MESSAGES/messages.po'));
+    $system['language'] = $system['languages'][$user_language];
+    if ($system['language']['code'] != DEFAULT_LOCALE) {
+      $po_file = ABSPATH . 'content/languages/locale/' . $system['language']['code'] . '/LC_MESSAGES/messages.po';
+      if (file_exists($po_file)) {
+        try {
+          $gettextTranslator->loadTranslations(Gettext\Translations::fromPoFile($po_file));
+        } catch (Throwable $e) {
+        }
       }
-      $system['current_language'] = $system['language']['code'];
     }
+    $system['current_language'] = $system['language']['code'];
   } else {
     if (isset($system['default_language'])) {
       $system['language'] = $system['default_language'];
       if ($system['default_language']['code'] != DEFAULT_LOCALE) {
-        $gettextTranslator->loadTranslations(Gettext\Translations::fromPoFile(ABSPATH . 'content/languages/locale/' . $system['default_language']['code'] . '/LC_MESSAGES/messages.po'));
+        $po_file = ABSPATH . 'content/languages/locale/' . $system['default_language']['code'] . '/LC_MESSAGES/messages.po';
+        if (file_exists($po_file)) {
+          try {
+            $gettextTranslator->loadTranslations(Gettext\Translations::fromPoFile($po_file));
+          } catch (Throwable $e) {
+          }
+        }
       }
       $system['current_language'] = $system['default_language']['code'];
+    }
+  }
+
+  /* fallback: ensure $system['language'] is always defined */
+  if (!isset($system['language'])) {
+    if (isset($system['default_language'])) {
+      $system['language'] = $system['default_language'];
+    } elseif (!empty($system['languages'])) {
+      $system['language'] = reset($system['languages']);
+    } else {
+      $system['language'] = ['code' => DEFAULT_LOCALE, 'dir' => 'LTR'];
     }
   }
 
@@ -946,11 +979,21 @@ function _error()
 {
   $args = func_get_args();
   if (count($args) > 1 && !in_array($args[0], ['BANNED_USER', 'PERMISSION'])) {
+    /* Two-argument form: _error(title, message) — used by exception catch blocks.
+       Send 500 so Google treats it as a server error (retried) rather than a soft 404
+       (which would cause the page to be de-indexed). */
+    if (!headers_sent()) {
+      header('HTTP/1.1 500 Internal Server Error');
+    }
     $title = $args[0];
     $message = $args[1];
   } else {
     switch ($args[0]) {
       case 'DB_ERROR':
+        if (!headers_sent()) {
+          header('HTTP/1.1 503 Service Unavailable');
+          header('Retry-After: 300');
+        }
         $title = "Database Error";
         $message = "<div class='text-start'><h1>" . "Error establishing a database connection" . "</h1>
                             <p>" . "This either means that the username and password information in your config.php file is incorrect or we can't contact the database server at localhost. This could mean your host's database server is down." . "</p>
@@ -964,6 +1007,10 @@ function _error()
         break;
 
       case 'SQL_ERROR':
+        if (!headers_sent()) {
+          header('HTTP/1.1 503 Service Unavailable');
+          header('Retry-After: 300');
+        }
         $title = __("Database Error");
         $message = __("An error occurred while writing to database. Please try again later");
         if (DEBUGGING) {
@@ -6894,10 +6941,21 @@ function page_header($title, $description = '', $image = '', $meta_robots = 'ind
   }
 
   /* canonical url */
-  $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http";
-  $host = $_SERVER['HTTP_HOST'] ?? 'connect.sampidia.com';
+  $base_url = !empty($system['system_url']) ? rtrim($system['system_url'], '/') : 'https://connect.sampidia.com';
   $request_uri = strtok($_SERVER['REQUEST_URI'] ?? '/', '?');
-  $canonical_url = $scheme . "://" . $host . $request_uri;
+  $canonical_url = ($request_uri === '/' || $request_uri === '') ? $base_url . '/' : $base_url . '/' . ltrim($request_uri, '/');
+
+  /* noindex for paginated/translated/sorted duplicate variants that Google should not index */
+  if ($meta_robots === 'index, follow') {
+    if (isset($_GET['lang']) && $_GET['lang'] !== '') {
+      /* ?lang= URLs are duplicate translated variants; already blocked in robots.txt but
+         belt-and-suspenders: tell crawlers that do reach them not to index them. */
+      $meta_robots = 'noindex, follow';
+    } elseif (isset($_GET['sort']) && $_GET['sort'] !== '') {
+      /* ?sort= URLs produce duplicate listing pages with no unique content. */
+      $meta_robots = 'noindex, follow';
+    }
+  }
 
   $smarty->assign('page_title', $title);
   $smarty->assign('page_description', $description);
@@ -7517,6 +7575,7 @@ function decode_urls($text)
  */
 function get_url_text($string, $length = 10)
 {
+  $string = (string)($string ?? '');
   $string = html_entity_decode($string, ENT_QUOTES);
   $string = htmlspecialchars_decode($string, ENT_QUOTES);
   $string = preg_replace('/[^\\pL\d]+/u', '-', $string);
@@ -7556,6 +7615,7 @@ function remove_querystring_var($url, $key)
  */
 function get_snippet_text($string)
 {
+  $string = (string)($string ?? '');
   $string = htmlspecialchars_decode($string, ENT_QUOTES);
   $string = strip_tags($string);
   return $string;
@@ -7570,6 +7630,7 @@ function get_snippet_text($string)
  */
 function get_tag($string)
 {
+  $string = (string)($string ?? '');
   $string = trim($string);
   $string = preg_replace('/\s+/', '_', $string);
   return $string;

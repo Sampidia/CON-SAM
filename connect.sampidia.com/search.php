@@ -16,7 +16,7 @@ if (!$system['system_public']) {
 }
 
 // valid inputs
-$_GET['tab'] = ($_GET['tab'] == "") ? "posts" : $_GET['tab'];
+$_GET['tab'] = (!isset($_GET['tab']) || $_GET['tab'] == "") ? "posts" : $_GET['tab'];
 if (!in_array($_GET['tab'], ["posts", "blogs", "users", "pages", "groups", "events"])) {
   _error(404);
 }
@@ -48,7 +48,7 @@ try {
   $widgets = $user->widgets('search');
   /* assign variables */
   $smarty->assign('widgets', $widgets);
-} catch (Exception $e) {
+} catch (Throwable $e) {
   _error(__("Error"), $e->getMessage());
 }
 
