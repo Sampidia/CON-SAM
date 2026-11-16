@@ -398,9 +398,10 @@ try {
   _error(__("Error"), $e->getMessage());
 }
 
-// page header
-$meta_robots = in_array($_GET['view'] ?? '', ['events', 'activities', 'subscribers', 'invites', 'search', 'settings']) ? 'noindex, follow' : 'index, follow';
-page_header($spage['page_title'] ?? '', $spage['page_description'] ?? '', $spage['page_picture'] ?? '', $meta_robots);
+// page header - sub-tabs are noindex, and canonical always points to main page URL
+$meta_robots = (!empty($_GET['view'])) ? 'noindex, follow' : 'index, follow';
+$canonical_url = $system['system_url'] . '/pages/' . $spage['page_name'];
+page_header($spage['page_title'] ?? '', $spage['page_description'] ?? '', $spage['page_picture'] ?? '', $meta_robots, $canonical_url);
 
 // assign variables
 $smarty->assign('spage', $spage);

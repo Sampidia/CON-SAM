@@ -65,6 +65,39 @@
     {include file='_head.css.tpl'}
     <!-- CSS Customized -->
 
+    <!-- Structured Data (JSON-LD) -->
+    {if isset($blog) && isset($blog['blog'])}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "{$canonical_url}"
+      },
+      "headline": {$blog['blog']['title']|json_encode},
+      "description": {$blog['blog']['text_snippet']|json_encode},
+      "image": "{$blog['blog']['parsed_cover']}",
+      "datePublished": "{date('c', $blog['time'])}",
+      "dateModified": "{date('c', $blog['time'])}",
+      "author": {
+        "@type": "Person",
+        "name": {$blog['post_author_name']|json_encode},
+        "url": "{$blog['post_author_url']}"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": {__($system['system_title'])|json_encode},
+        "logo": {
+          "@type": "ImageObject",
+          "url": "{$system['system_url']}/connect.png"
+        }
+      }
+    }
+    </script>
+    {/if}
+    <!-- Structured Data (JSON-LD) -->
+
     <!-- Header Custom JavaScript -->
     {if $system['custome_js_header']}
       <script>

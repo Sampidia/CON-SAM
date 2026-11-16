@@ -68,7 +68,7 @@ try {
       $url = "/search/" . $_GET['query'];
 
       // page header
-      page_header(__("Jobs") . ' &rsaquo; ' . __("Search") . ' | ' . __($system['system_title']), __($system['system_description_jobs']));
+      page_header(__("Jobs") . ' &rsaquo; ' . __("Search") . ' | ' . __($system['system_title']), __($system['system_description_jobs']), '', 'noindex, follow');
 
       // get jobs categories
       $categories = $user->get_categories("jobs_categories");

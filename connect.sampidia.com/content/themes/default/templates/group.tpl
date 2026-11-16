@@ -246,34 +246,34 @@
             {include file='__svg_icons.tpl' icon="newsfeed" class="main-icon mr5" width="24px" height="24px"}
             <span class="ml5 d-none d-xl-inline-block">{__("Timeline")}</span>
           </a>
-          <a href="{$system['system_url']}/groups/{$group['group_name']}/photos" {if $view == "photos" || $view == "albums" || $view == "album"}class="active" {/if}>
+          <a href="{$system['system_url']}/groups/{$group['group_name']}/photos" rel="nofollow" {if $view == "photos" || $view == "albums" || $view == "album"}class="active" {/if}>
             {include file='__svg_icons.tpl' icon="photos" class="main-icon mr5" width="24px" height="24px"}
             <span class="ml5 d-none d-xl-inline-block">{__("Photos")}</span>
           </a>
           {if $system['videos_enabled']}
-            <a href="{$system['system_url']}/groups/{$group['group_name']}/videos" {if $view == "videos" || $view == "reels"}class="active" {/if}>
+            <a href="{$system['system_url']}/groups/{$group['group_name']}/videos" rel="nofollow" {if $view == "videos" || $view == "reels"}class="active" {/if}>
               {include file='__svg_icons.tpl' icon="videos" class="main-icon mr5" width="24px" height="24px"}
               <span class="ml5 d-none d-xl-inline-block">{__("Videos")}</span>
             </a>
           {elseif $system['reels_enabled']}
-            <a href="{$system['system_url']}/groups/{$group['group_name']}/reels" {if $view == "reels"}class="active" {/if}>
+            <a href="{$system['system_url']}/groups/{$group['group_name']}/reels" rel="nofollow" {if $view == "reels"}class="active" {/if}>
               {include file='__svg_icons.tpl' icon="reels" class="main-icon mr5" width="24px" height="24px"}
               <span class="ml5 d-none d-xl-inline-block">{__("Reels")}</span>
             </a>
           {/if}
           {if $system['market_enabled']}
-            <a href="{$system['system_url']}/groups/{$group['group_name']}/products" {if $view == "products"}class="active" {/if}>
+            <a href="{$system['system_url']}/groups/{$group['group_name']}/products" rel="nofollow" {if $view == "products"}class="active" {/if}>
               {include file='__svg_icons.tpl' icon="products" class="main-icon mr5" width="24px" height="24px"}
               <span class="ml5 d-none d-xl-inline-block">{__("Store")}</span>
             </a>
           {/if}
           {if $system['groups_reviews_enabled']}
-            <a href="{$system['system_url']}/groups/{$group['group_name']}/reviews" {if $view == "reviews"}class="active" {/if}>
+            <a href="{$system['system_url']}/groups/{$group['group_name']}/reviews" rel="nofollow" {if $view == "reviews"}class="active" {/if}>
               {include file='__svg_icons.tpl' icon="star" class="main-icon mr5" width="24px" height="24px"}
               <span class="ml5 d-none d-xl-inline-block">{__("Reviews")} {if $group['group_rate']}<span class="badge bg-light text-primary">{$group['group_rate']|number_format:1}</span>{/if}</span>
             </a>
           {/if}
-          <a href="{$system['system_url']}/groups/{$group['group_name']}/members" {if $view == "members" || $view == "invites"}class="active" {/if}>
+          <a href="{$system['system_url']}/groups/{$group['group_name']}/members" rel="nofollow" {if $view == "members" || $view == "invites"}class="active" {/if}>
             {include file='__svg_icons.tpl' icon="friends" class="main-icon mr5" width="24px" height="24px"}
             <span class="ml5 d-none d-xl-inline-block">{__("Members")}</span>
           </a>

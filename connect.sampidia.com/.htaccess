@@ -72,6 +72,11 @@ Options -MultiViews
 ## RewriteEngine ##
 RewriteEngine on
 
+## Redirect trailing slash to non-trailing slash (prevents duplicate URL indexing e.g. /forums/ vs /forums) ##
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} (.+)/+$
+RewriteRule ^ %1 [R=301,L]
+
 ## Block cgi-sys paths — these are legacy cPanel suspended-page URLs.
 ## Return 410 Gone so Google removes them from the index cleanly.
 RewriteRule ^cgi-sys/ - [R=410,L]
@@ -84,6 +89,9 @@ RewriteRule ^content/uploads/$ - [F,L]
 ## OPTIONAL: Uploads Permission for Non-Logged In Users ##
 # RewriteCond %{REQUEST_FILENAME} -s
 # RewriteRule ^content/uploads/((files|photos|sounds|videos)/.*)$ files.php?file=$1 [L,QSA]
+## Dynamic XML Sitemap ##
+RewriteRule ^sitemap\.xml$ sitemap.php [L,QSA]
+
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule .* - [L,QSA]

@@ -371,9 +371,10 @@ try {
   _error(__("Error"), $e->getMessage());
 }
 
-// page header
-$meta_robots = in_array($_GET['view'] ?? '', ['members', 'subscribers', 'invites', 'search', 'settings']) ? 'noindex, follow' : 'index, follow';
-page_header($group['group_title'] ?? '', $group['group_description'] ?? '', $group['group_picture'] ?? '', $meta_robots);
+// page header - sub-tabs are noindex, and canonical always points to main group URL
+$meta_robots = (!empty($_GET['view'])) ? 'noindex, follow' : 'index, follow';
+$canonical_url = $system['system_url'] . '/groups/' . $group['group_name'];
+page_header($group['group_title'] ?? '', $group['group_description'] ?? '', $group['group_picture'] ?? '', $meta_robots, $canonical_url);
 
 // assign variables
 $smarty->assign('group', $group);

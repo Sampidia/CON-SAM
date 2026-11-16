@@ -51,7 +51,7 @@ try {
       $url = "/search/" . $_GET['query'];
 
       // page header
-      page_header(__("Movies") . ' | ' . __($system['system_title']), __($system['system_description_movies']));
+      page_header(__("Movies") . ' | ' . __($system['system_title']), __($system['system_description_movies']), '', 'noindex, follow');
       break;
 
     case 'genre':

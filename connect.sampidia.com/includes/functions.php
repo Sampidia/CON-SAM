@@ -179,7 +179,8 @@ function check_system_url()
   $protocol = get_system_protocol();
   $parsed_url = parse_url(SYS_URL);
   if (($parsed_url['scheme'] != $protocol) || ($parsed_url['host'] != $_SERVER['HTTP_HOST'])) {
-    header('Location: ' . SYS_URL);
+    $target_url = SYS_URL . ($_SERVER['REQUEST_URI'] ?? '');
+    header('Location: ' . $target_url, true, 301);
     exit;
   }
 }
@@ -1051,7 +1052,7 @@ function _error()
         $message = ($args[1]) ? $args[1] : __("Your privacy settings do not allow you to chat with this user, Go to your privacy settings to change this");
         if (isset($smarty)) {
           $smarty->assign('message', $message);
-          page_header($title);
+          page_header($title, '', '', 'noindex, follow');
           page_footer('permission');
           exit;
         }
@@ -1063,7 +1064,7 @@ function _error()
         $message = __("You do not have the permission to view this content");
         if (isset($smarty)) {
           $smarty->assign('message', $message);
-          page_header($title);
+          page_header($title, '', '', 'noindex, follow');
           page_footer('banned');
           exit;
         }
@@ -1075,7 +1076,7 @@ function _error()
         $message = $args[1];
         if (isset($smarty)) {
           $smarty->assign('message', $message);
-          page_header($title);
+          page_header($title, '', '', 'noindex, follow');
           page_footer('banned');
           exit;
         }
@@ -1084,7 +1085,7 @@ function _error()
       case 'ACTIVATION':
         global $smarty;
         if (isset($smarty)) {
-          page_header(__("Activation Required"));
+          page_header(__("Activation Required"), '', '', 'noindex, follow');
           page_footer('activation');
           exit;
         }
@@ -1093,7 +1094,7 @@ function _error()
       case 'APPROVAL':
         global $smarty;
         if (isset($smarty)) {
-          page_header(__("Admin Approval Required"));
+          page_header(__("Admin Approval Required"), '', '', 'noindex, follow');
           page_footer('approval');
           exit;
         }
@@ -1145,7 +1146,7 @@ function _error()
         }
         if (isset($smarty)) {
           $smarty->assign('message', $message);
-          page_header($title);
+          page_header($title, '', '', 'noindex, follow');
           page_footer('404');
           exit;
         }
@@ -6928,7 +6929,7 @@ function popover($uid, $username, $name)
  * @param string $description
  * @return void
  */
-function page_header($title, $description = '', $image = '', $meta_robots = 'index, follow')
+function page_header($title, $description = '', $image = '', $meta_robots = 'index, follow', $custom_canonical = '')
 {
   global $smarty, $system;
   $description = ($description != '') ? $description : __($system['system_description']);
@@ -6941,9 +6942,14 @@ function page_header($title, $description = '', $image = '', $meta_robots = 'ind
   }
 
   /* canonical url */
-  $base_url = !empty($system['system_url']) ? rtrim($system['system_url'], '/') : 'https://connect.sampidia.com';
-  $request_uri = strtok($_SERVER['REQUEST_URI'] ?? '/', '?');
-  $canonical_url = ($request_uri === '/' || $request_uri === '') ? $base_url . '/' : $base_url . '/' . ltrim($request_uri, '/');
+  if (!empty($custom_canonical)) {
+    $canonical_url = $custom_canonical;
+  } else {
+    $base_url = !empty($system['system_url']) ? rtrim($system['system_url'], '/') : 'https://connect.sampidia.com';
+    $raw_path = strtok($_SERVER['REQUEST_URI'] ?? '/', '?');
+    $clean_path = trim($raw_path, '/');
+    $canonical_url = empty($clean_path) ? $base_url . '/' : $base_url . '/' . $clean_path;
+  }
 
   /* noindex for paginated/translated/sorted duplicate variants that Google should not index */
   if ($meta_robots === 'index, follow') {
@@ -6953,6 +6959,12 @@ function page_header($title, $description = '', $image = '', $meta_robots = 'ind
       $meta_robots = 'noindex, follow';
     } elseif (isset($_GET['sort']) && $_GET['sort'] !== '') {
       /* ?sort= URLs produce duplicate listing pages with no unique content. */
+      $meta_robots = 'noindex, follow';
+    } elseif (isset($_GET['country']) && $_GET['country'] !== '') {
+      /* ?country= URLs produce duplicate filtered listing pages. */
+      $meta_robots = 'noindex, follow';
+    } elseif (isset($_GET['ref']) && $_GET['ref'] !== '') {
+      /* ?ref= tracking URLs produce duplicate pages. */
       $meta_robots = 'noindex, follow';
     }
   }

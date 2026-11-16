@@ -68,7 +68,7 @@ try {
       $url = "/search/" . $_GET['query'];
 
       // page header
-      page_header(__("Marketplace") . ' &rsaquo; ' . __("Search") . ' | ' . __($system['system_title']), __($system['system_description_marketplace']));
+      page_header(__("Marketplace") . ' &rsaquo; ' . __("Search") . ' | ' . __($system['system_title']), __($system['system_description_marketplace']), '', 'noindex, follow');
 
       // get market categories
       $categories = $user->get_categories("market_categories");

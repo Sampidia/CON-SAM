@@ -262,29 +262,29 @@
           {include file='__svg_icons.tpl' icon="newsfeed" class="main-icon mr5" width="24px" height="24px"}
           <span class="ml5 d-none d-xl-inline-block">{__("Timeline")}</span>
         </a>
-        <a href="{$system['system_url']}/pages/{$spage['page_name']}/photos" {if $view == "photos" || $view == "albums" || $view == "album"}class="active" {/if}>
+        <a href="{$system['system_url']}/pages/{$spage['page_name']}/photos" rel="nofollow" {if $view == "photos" || $view == "albums" || $view == "album"}class="active" {/if}>
           {include file='__svg_icons.tpl' icon="photos" class="main-icon mr5" width="24px" height="24px"}
           <span class="ml5 d-none d-xl-inline-block">{__("Photos")}</span>
         </a>
         {if $system['videos_enabled']}
-          <a href="{$system['system_url']}/pages/{$spage['page_name']}/videos" {if $view == "videos" || $view == "reels"}class="active" {/if}>
+          <a href="{$system['system_url']}/pages/{$spage['page_name']}/videos" rel="nofollow" {if $view == "videos" || $view == "reels"}class="active" {/if}>
             {include file='__svg_icons.tpl' icon="videos" class="main-icon mr5" width="24px" height="24px"}
             <span class="ml5 d-none d-xl-inline-block">{__("Videos")}</span>
           </a>
         {elseif $system['reels_enabled']}
-          <a href="{$system['system_url']}/pages/{$spage['page_name']}/reels" {if $view == "reels"}class="active" {/if}>
+          <a href="{$system['system_url']}/pages/{$spage['page_name']}/reels" rel="nofollow" {if $view == "reels"}class="active" {/if}>
             {include file='__svg_icons.tpl' icon="reels" class="main-icon mr5" width="24px" height="24px"}
             <span class="ml5 d-none d-xl-inline-block">{__("Reels")}</span>
           </a>
         {/if}
         {if $spage['can_sell_products']}
-          <a href="{$system['system_url']}/pages/{$spage['page_name']}/products" {if $view == "products"}class="active" {/if}>
+          <a href="{$system['system_url']}/pages/{$spage['page_name']}/products" rel="nofollow" {if $view == "products"}class="active" {/if}>
             {include file='__svg_icons.tpl' icon="products" class="main-icon mr5" width="24px" height="24px"}
             <span class="ml5 d-none d-xl-inline-block">{__("Store")}</span>
           </a>
         {/if}
         {if $system['pages_reviews_enabled']}
-          <a href="{$system['system_url']}/pages/{$spage['page_name']}/reviews" {if $view == "reviews"}class="active" {/if}>
+          <a href="{$system['system_url']}/pages/{$spage['page_name']}/reviews" rel="nofollow" {if $view == "reviews"}class="active" {/if}>
             {include file='__svg_icons.tpl' icon="star" class="main-icon mr5" width="24px" height="24px"}
             <span class="ml5 d-none d-xl-inline-block">{__("Reviews")} {if $spage['page_rate']}<span class="badge bg-light text-primary">{$spage['page_rate']|number_format:1}</span>{/if}</span>
           </a>
@@ -296,7 +296,7 @@
           </a>
         {/if}
         {if $system['pages_activities_enabled'] && $spage['page_activities_enabled']}
-          <a href="{$system['system_url']}/pages/{$spage['page_name']}/activities" {if $view == "activities"}class="active" {/if}>
+          <a href="{$system['system_url']}/pages/{$spage['page_name']}/activities" rel="nofollow" {if $view == "activities"}class="active" {/if}>
             {include file='__svg_icons.tpl' icon="activities" class="main-icon mr5" width="24px" height="24px"}
             <span class="ml5 d-none d-xl-inline-block">{__("Activities")}</span>
           </a>

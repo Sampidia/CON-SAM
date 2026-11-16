@@ -51,8 +51,8 @@ try {
   _error(__("Error"), $e->getMessage());
 }
 
-// page header
-page_header($photo['og_title'] ?? '', $photo['og_description'] ?? '', $photo['og_image'] ?? '');
+// page header - standalone photo viewer wrapper is thin content; keep images indexed via original pages
+page_header($photo['og_title'] ?? '', $photo['og_description'] ?? '', $photo['og_image'] ?? '', 'noindex, follow');
 
 // page footer
 page_footer('photo');

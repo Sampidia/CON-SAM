@@ -182,7 +182,7 @@ try {
 
     case 'search':
       // page header
-      page_header(__("Forums") . " &rsaquo; " . __("Search") . ' | ' . __($system['system_title']), __($system['system_description_forums']));
+      page_header(__("Forums") . " &rsaquo; " . __("Search") . ' | ' . __($system['system_title']), __($system['system_description_forums']), '', 'noindex, follow');
 
       // get forums
       $forums = $user->get_forums();
@@ -192,7 +192,7 @@ try {
 
     case 'search-results':
       // page header
-      page_header(__("Forums") . " &rsaquo; " . __("Search Results") . ' | ' . __($system['system_title']), __($system['system_description_forums']));
+      page_header(__("Forums") . " &rsaquo; " . __("Search Results") . ' | ' . __($system['system_title']), __($system['system_description_forums']), '', 'noindex, follow');
 
       if (!isset($_GET['query']) || !isset($_GET['type']) || !isset($_GET['forum'])) {
         redirect('/forums/search');

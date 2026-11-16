@@ -298,9 +298,10 @@ try {
   _error(__("Error"), $e->getMessage());
 }
 
-// page header
-$meta_robots = in_array($_GET['view'] ?? '', ['going', 'interested', 'invited', 'invites', 'search', 'settings']) ? 'noindex, follow' : 'index, follow';
-page_header($event['event_title'] ?? '', $event['event_description'] ?? '', $event['event_cover'] ?? '', $meta_robots);
+// page header - sub-tabs are noindex, and canonical always points to main event URL
+$meta_robots = (!empty($_GET['view'])) ? 'noindex, follow' : 'index, follow';
+$canonical_url = $system['system_url'] . '/events/' . $event['event_id'];
+page_header($event['event_title'] ?? '', $event['event_description'] ?? '', $event['event_cover'] ?? '', $meta_robots, $canonical_url);
 
 // assign variables
 $smarty->assign('event', $event);

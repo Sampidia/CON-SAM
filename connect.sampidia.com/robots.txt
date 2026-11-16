@@ -1,5 +1,5 @@
 # robots.txt for Connect.Sampidia.com
-# Last Updated: 2026-11-07
+# Last Updated: 2026-11-16
 
 ########################################
 # GLOBAL ACCESS
@@ -21,6 +21,35 @@ Disallow: /admincp/
 Disallow: /modcp/
 Disallow: /api/
 Disallow: /webhooks/
+
+# Parameter & Search Control (prevents crawl budget waste and duplicate URLs)
+Disallow: /search/
+Disallow: /search
+Disallow: /*?lang=*
+Disallow: /*?sort=*
+Disallow: /*?country=*
+Disallow: /*?ref=*
+
+# Block duplicate / thin profile, page and group sub-tabs
+Disallow: /*/followers
+Disallow: /*/followings
+Disallow: /*/friends
+Disallow: /*/subscriptions
+Disallow: /*/subscribers
+Disallow: /*/likes
+Disallow: /*/photos
+Disallow: /*/albums
+Disallow: /*/videos
+Disallow: /*/reels
+Disallow: /*/events
+Disallow: /*/groups
+
+# Block crawl trap pagination in directories
+Disallow: /directory/posts/
+Disallow: /directory/users/
+
+# Block standalone photo attachment viewer pages
+Disallow: /photos/
 
 # Auth & Account Control
 Disallow: /login/

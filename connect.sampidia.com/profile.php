@@ -447,9 +447,10 @@ try {
   _error(__("Error"), $e->getMessage());
 }
 
-// page header
-$meta_robots = in_array($_GET['view'] ?? '', ['friends', 'followers', 'followings', 'subscribers', 'subscriptions', 'likes', 'events', 'search']) ? 'noindex, follow' : 'index, follow';
-page_header($profile['name'] ?? '', $profile['user_biography'] ?? '', $profile['user_picture'] ?? '', $meta_robots);
+// page header - sub-tabs are noindex, and canonical always points to main profile URL
+$meta_robots = (!empty($_GET['view'])) ? 'noindex, follow' : 'index, follow';
+$canonical_url = $system['system_url'] . '/' . $profile['user_name'];
+page_header($profile['name'] ?? '', $profile['user_biography'] ?? '', $profile['user_picture'] ?? '', $meta_robots, $canonical_url);
 
 // assign variables
 $smarty->assign('profile', $profile);

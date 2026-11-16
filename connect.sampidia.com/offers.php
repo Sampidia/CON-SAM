@@ -68,7 +68,7 @@ try {
       $url = "/search/" . $_GET['query'];
 
       // page header
-      page_header(__("Offers") . ' &rsaquo; ' . __("Search") . ' | ' . __($system['system_title']), __($system['system_description_offers']));
+      page_header(__("Offers") . ' &rsaquo; ' . __("Search") . ' | ' . __($system['system_title']), __($system['system_description_offers']), '', 'noindex, follow');
 
       // get offers categories
       $categories = $user->get_categories("offers_categories");

@@ -31,7 +31,8 @@ try {
 
     case 'users':
       // page header
-      page_header(__("Users Directory") . ' | ' . __($system['system_title']), __($system['system_description_directory']));
+      $meta_robots = (isset($_GET['page']) && (int) $_GET['page'] > 1) ? 'noindex, follow' : 'index, follow';
+      page_header(__("Users Directory") . ' | ' . __($system['system_title']), __($system['system_description_directory']), '', $meta_robots);
 
       // pager config
       require('includes/class-pager.php');
@@ -58,8 +59,8 @@ try {
       break;
 
     case 'posts':
-      // page header
-      page_header(__("Posts Directory") . ' | ' . __($system['system_title']), __($system['system_description_directory']));
+      // page header - Posts directory is an uncurated dump of thousands of old posts; noindex to stop crawl trap
+      page_header(__("Posts Directory") . ' | ' . __($system['system_title']), __($system['system_description_directory']), '', 'noindex, follow');
 
       // pager config
       require('includes/class-pager.php');
@@ -92,7 +93,8 @@ try {
       }
 
       // page header
-      page_header(__("Pages Directory") . ' | ' . __($system['system_title']), __($system['system_description_directory']));
+      $meta_robots = (isset($_GET['page']) && (int) $_GET['page'] > 1) ? 'noindex, follow' : 'index, follow';
+      page_header(__("Pages Directory") . ' | ' . __($system['system_title']), __($system['system_description_directory']), '', $meta_robots);
 
       // pager config
       require('includes/class-pager.php');
@@ -131,7 +133,8 @@ try {
       }
 
       // page header
-      page_header(__("Groups Directory") . ' | ' . __($system['system_title']), __($system['system_description_directory']));
+      $meta_robots = (isset($_GET['page']) && (int) $_GET['page'] > 1) ? 'noindex, follow' : 'index, follow';
+      page_header(__("Groups Directory") . ' | ' . __($system['system_title']), __($system['system_description_directory']), '', $meta_robots);
 
       // pager config
       require('includes/class-pager.php');
@@ -164,7 +167,8 @@ try {
       }
 
       // page header
-      page_header(__("Events Directory") . ' | ' . __($system['system_title']), __($system['system_description_directory']));
+      $meta_robots = (isset($_GET['page']) && (int) $_GET['page'] > 1) ? 'noindex, follow' : 'index, follow';
+      page_header(__("Events Directory") . ' | ' . __($system['system_title']), __($system['system_description_directory']), '', $meta_robots);
 
       // pager config
       require('includes/class-pager.php');
@@ -197,7 +201,8 @@ try {
       }
 
       // page header
-      page_header(__("Games Directory") . ' | ' . __($system['system_title']), __($system['system_description_directory']));
+      $meta_robots = (isset($_GET['page']) && (int) $_GET['page'] > 1) ? 'noindex, follow' : 'index, follow';
+      page_header(__("Games Directory") . ' | ' . __($system['system_title']), __($system['system_description_directory']), '', $meta_robots);
 
       // pager config
       require('includes/class-pager.php');
