@@ -78,8 +78,8 @@
       "headline": {$blog['blog']['title']|json_encode},
       "description": {$blog['blog']['text_snippet']|json_encode},
       "image": "{$blog['blog']['parsed_cover']}",
-      "datePublished": "{date('c', $blog['time'])}",
-      "dateModified": "{date('c', $blog['time'])}",
+      "datePublished": "{date('c', strtotime($blog['time']))}",
+      "dateModified": "{date('c', strtotime($blog['time']))}",
       "author": {
         "@type": "Person",
         "name": {$blog['post_author_name']|json_encode},

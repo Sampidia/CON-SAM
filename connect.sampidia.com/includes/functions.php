@@ -493,6 +493,28 @@ function init_system(&$system)
 
 
 /**
+ * smarty_modifier_date
+ * Safe date modifier wrapper for Smarty in PHP 8.x
+ * Automatically parses datetime strings via strtotime to prevent TypeError
+ *
+ * @param string $format
+ * @param mixed $timestamp
+ * @return string
+ */
+function smarty_modifier_date($format, $timestamp = null)
+{
+  if ($timestamp === null || $timestamp === '') {
+    return date($format);
+  }
+  if (!is_numeric($timestamp)) {
+    $parsed = strtotime($timestamp);
+    $timestamp = ($parsed !== false) ? $parsed : time();
+  }
+  return date($format, (int)$timestamp);
+}
+
+
+/**
  * init_smarty
  *
  * @return object
@@ -518,7 +540,8 @@ function init_smarty()
   $smarty->registerPlugin('modifier', 'htmlspecialchars', 'htmlspecialchars');
   $smarty->registerPlugin('modifier', 'count', 'count');
   $smarty->registerPlugin('modifier', 'explode', 'explode');
-  $smarty->registerPlugin('modifier', 'date', 'date');
+  $smarty->registerPlugin('modifier', 'strtotime', 'strtotime');
+  $smarty->registerPlugin('modifier', 'date', 'smarty_modifier_date');
   $smarty->registerPlugin('modifier', 'number_format', 'number_format');
   $smarty->registerPlugin('modifier', 'strtolower', 'strtolower');
   $smarty->registerPlugin('modifier', 'get_payment_vat_value', 'get_payment_vat_value');

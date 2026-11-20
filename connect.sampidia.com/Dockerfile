@@ -42,7 +42,7 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
         fileinfo
 
 # Enable Apache Modules
-RUN a2enmod rewrite headers
+RUN a2enmod rewrite headers deflate expires
 
 # Copy Apache site config (AllowOverride All - required for .htaccess to work)
 COPY sngine.conf /etc/apache2/sites-available/000-default.conf
