@@ -66,7 +66,8 @@ Options -MultiViews
 	ExpiresByType text/x-javascript "access plus 1 month"
 	ExpiresByType application/x-shockwave-flash "access plus 1 month"
 	ExpiresByType image/x-icon "access plus 1 year"
-	ExpiresDefault "access plus 2 days"
+	ExpiresByType text/html "access plus 0 seconds"
+	ExpiresDefault "access plus 0 seconds"
 </IfModule>
 
 ## RewriteEngine ##
@@ -74,6 +75,7 @@ RewriteEngine on
 
 ## Redirect trailing slash to non-trailing slash (prevents duplicate URL indexing e.g. /forums/ vs /forums) ##
 RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/signout
 RewriteCond %{REQUEST_URI} (.+)/+$
 RewriteRule ^ %1 [R=301,L]
 
