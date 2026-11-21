@@ -66,7 +66,11 @@ $gettextTranslator->register();
 try {
   $db = init_db_connection();
 } catch (Throwable $e) {
-  _error('DB_ERROR');
+  if (defined('DEBUGGING') && DEBUGGING) {
+    _error("Database Connection Error", $e->getMessage());
+  } else {
+    _error('DB_ERROR');
+  }
 }
 
 

@@ -256,10 +256,17 @@ function init_db_connection($db_host = null, $db_user = null, $db_password = nul
   $db_user = (isset($db_user)) ? $db_user : DB_USER;
   $db_password = (isset($db_password)) ? $db_password : DB_PASSWORD;
   $db_name = (isset($db_name)) ? $db_name : DB_NAME;
-  $db_port = (isset($db_port)) ? $db_port : DB_PORT;
-  $db = new mysqli($db_host, $db_user, $db_password, $db_name, $db_port);
-  if (mysqli_connect_error()) {
-    throw new Exception("DB_ERROR");
+  $db_port = (int)((isset($db_port)) ? $db_port : DB_PORT);
+
+  $db = mysqli_init();
+  $db->ssl_set(NULL, NULL, NULL, NULL, NULL);
+  $connected = @$db->real_connect($db_host, $db_user, $db_password, $db_name, $db_port, NULL, MYSQLI_CLIENT_SSL);
+  if (!$connected) {
+    // Fallback without SSL if the server does not enforce SSL
+    $connected = @$db->real_connect($db_host, $db_user, $db_password, $db_name, $db_port);
+  }
+  if (!$connected || $db->connect_errno) {
+    throw new Exception($db->connect_error ?: mysqli_connect_error() ?: "DB_ERROR");
   }
   /* set db charset */
   $db->set_charset('utf8mb4');
