@@ -21,6 +21,10 @@ Options -MultiViews
 <FilesMatch "\.(jpg|jpeg|png|gif|svg|swf|css|js|webp)$">
 	Header set Cache-Control "max-age=31536000, public"
 </FilesMatch>
+<FilesMatch "\.(php)$">
+	Header set Cache-Control "private, no-cache, no-store, must-revalidate, max-age=0"
+	Header set Pragma "no-cache"
+</FilesMatch>
 </IfModule>
 
 ## Gzip Control ##

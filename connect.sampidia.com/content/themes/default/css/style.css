@@ -8211,8 +8211,36 @@ body.night-mode .card-register .card-header .card-subtitle {
   height: 60px;
 }
 
-.card-register .input-group>.input-group-text {
+.card-register .input-group>.input-group-text:first-child {
   border-radius: 16px 0 0 16px;
+}
+
+.card-register .input-group>.input-group-text:last-child,
+.card-register .input-group>.btn:last-child {
+  border-radius: 0 16px 16px 0;
+  border-left: 0;
+}
+
+.card-register .input-group>.form-control:not(:last-child) {
+  border-right: 0;
+  border-radius: 0;
+}
+
+.card-register .input-group .js_toggle-password {
+  cursor: pointer;
+  color: #888;
+}
+
+.card-register .input-group .js_toggle-password:hover {
+  color: #333;
+}
+
+body.night-mode .card-register .input-group .js_toggle-password {
+  color: #aaa;
+}
+
+body.night-mode .card-register .input-group .js_toggle-password:hover {
+  color: #fff;
 }
 
 /* -- */

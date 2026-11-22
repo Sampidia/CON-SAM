@@ -49,6 +49,14 @@ require(ABSPATH . 'includes/functions.php');
 check_system_url();
 
 
+// anti-caching headers for dynamic pages
+if (!headers_sent()) {
+  header('Cache-Control: private, no-cache, no-store, must-revalidate, max-age=0');
+  header('Pragma: no-cache');
+  header('Expires: 0');
+}
+
+
 // init system session
 init_system_session();
 
