@@ -325,7 +325,7 @@
             <div class="input-group">
               <span class="input-group-text bg-transparent"><i class="fas fa-lock fa-fw"></i></span>
               <input type="password" class="form-control" placeholder='{__("Password")}' name="password" required>
-              <button type="button" class="input-group-text bg-transparent js_toggle-password" style="cursor: pointer;" title="{__('Show/Hide Password')}" tabindex="-1">
+              <button type="button" class="input-group-text bg-transparent js_toggle-password" style="cursor: pointer;" onclick="togglePassword(this)" title="{__('Show/Hide Password')}" tabindex="-1">
                 <i class="fas fa-eye fa-fw text-muted"></i>
               </button>
             </div>
@@ -432,7 +432,7 @@
               <div class="input-group">
                 <span class="input-group-text bg-transparent"><i class="fas fa-key fa-fw"></i></span>
                 <input name="password" type="password" class="form-control" placeholder='{__("Password")}' required>
-                <button type="button" class="input-group-text bg-transparent js_toggle-password" style="cursor: pointer;" title="{__('Show/Hide Password')}" tabindex="-1">
+                <button type="button" class="input-group-text bg-transparent js_toggle-password" style="cursor: pointer;" onclick="togglePassword(this)" title="{__('Show/Hide Password')}" tabindex="-1">
                   <i class="fas fa-eye fa-fw text-muted"></i>
                 </button>
               </div>
@@ -568,10 +568,7 @@
   </div>
 
   <script>
-    document.addEventListener('click', function(e) {
-      var btn = e.target.closest('.js_toggle-password');
-      if (!btn) return;
-      e.preventDefault();
+    function togglePassword(btn) {
       var group = btn.closest('.input-group');
       if (!group) return;
       var input = group.querySelector('input');
@@ -590,7 +587,7 @@
           icon.classList.add('fa-eye');
         }
       }
-    });
+    }
   </script>
 
 {/if}

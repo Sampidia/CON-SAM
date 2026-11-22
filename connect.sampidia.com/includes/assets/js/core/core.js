@@ -2081,25 +2081,6 @@ $(function () {
   });
 
 
-  // toggle password visibility
-  $('body').on('click', '.js_toggle-password', function (e) {
-    e.preventDefault();
-    var group = $(this).closest('.input-group');
-    var input = group.find('input[name="password"]');
-    if (!input.length) {
-      input = group.find('input');
-    }
-    var icon = $(this).find('i');
-    if (input.attr('type') === 'password') {
-      input.attr('type', 'text');
-      icon.removeClass('fa-eye').addClass('fa-eye-slash');
-    } else {
-      input.attr('type', 'password');
-      icon.removeClass('fa-eye-slash').addClass('fa-eye');
-    }
-  });
-
-
   // handle theme mode
   if (theme_mode_night) {
     $('.table').addClass('table-dark');
